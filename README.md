@@ -9,7 +9,7 @@
 eCommerce Application for online-shop.
 
 ## Description
-Welcome to our online shop, where shopping is redefined and brought to your fingertips! Our online shop offers an unparalleled shopping experience, providing a vast array of products and services delivered right to your doorstep. With a user-friendly interface and seamless navigation, you can explore an extensive catalog of items. Join us on this digital retail journey and indulge in the convenience of shopping from the comfort of your home. Embrace the future of online shopping with us and discover a world of possibilities, just a click away.
+Welcome to our Ecommerce Online Shop Project! This project is a fully functional web-based online shop designed to provide a seamless shopping experience to customers. It allows users to browse and purchase products, manage their shopping cart, and complete secure purchase. With a user-friendly interface and robust backend, this online shop aims to empower businesses to reach a wider audience and enhance their online presence.    
 
 ## Technology Stack
 
