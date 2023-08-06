@@ -23,3 +23,4 @@ Welcome to our Ecommerce Online Shop Project! This project is a fully functional
 ![Static Badge](https://img.shields.io/badge/Prettier-maker?color=%23cc330d)
 ![Static Badge](https://img.shields.io/badge/Husky-maker?color=%23a5005b)
 ![Static Badge](https://img.shields.io/badge/CommerceTools-maker)
+![Static Badge](https://img.shields.io/badge/Jest-maker?color=%23411142)
