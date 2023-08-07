@@ -15,7 +15,7 @@ Detail how you tested your changes.
 Link the relevant issues, and PRs that are related to these changes. This helps in keeping track of the overall changes and discussions around this feature.
 
 ## Checklist
-
+- [ ] My code follows the code style of this project
 - [ ] I have made the necessary changes and tested them
 - [ ] I have updated the documentation accordingly
 - [ ] I have added tests to cover my changes
