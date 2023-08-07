@@ -42,14 +42,12 @@ Setting up and running this project locally is a straightforward process:
 
 3. **Start the application.**
    `     npm start
-    `
+ `
    You now have the local development server running and can start contributing!
 
 ## Technology Stack
 
 This project is built using a variety of modern web development technologies:
-
-## Technology Stack
 
 ![Static Badge](https://img.shields.io/badge/HTML-maker?color=%23f07e33)
 ![Static Badge](https://img.shields.io/badge/CSS%2FSASS-maker?color=%23eb13aa)
