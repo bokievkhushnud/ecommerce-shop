@@ -41,9 +41,10 @@ Setting up and running this project locally is a straightforward process:
     ```
 
 3. **Start the application.**
-   `     npm start
- `
-   You now have the local development server running and can start contributing!
+    ```
+    npm start
+    ```
+    You now have the local development server running and can start contributing!
 
 ## Technology Stack
 
