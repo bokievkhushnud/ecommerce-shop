@@ -42,9 +42,6 @@ lib-cov
 .DS_Store
 Thumbs.db
 
-# Public folder (if you don't want to track changes in public folder)
-
-
 # Storybook build output
 /storybook-static
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
