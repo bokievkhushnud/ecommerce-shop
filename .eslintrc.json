@@ -1,7 +1,7 @@
 {
-  "extends": [
-      "react-app",
-      "react-app/jest",
-      "prettier"
-  ]
+  "extends": ["react-app", "react-app/jest", "plugin:prettier/recommended"],
+  // put semicolons at the end of lines
+  "rules": {
+    "semi": ["error", "always"]
+  }
 }
