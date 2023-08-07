@@ -19,26 +19,26 @@ Welcome to our eCommerce Application, an online shop designed with both business
 
 ## Features
 
-- Browse products with ease: Search functionality makes it easy for customers to find exactly what they're looking for.
-- Detailed product pages: Includes comprehensive product descriptions, vivid images, and clear pricing details.
-- User-friendly shopping cart: Customers can easily add, update, or remove items in their shopping cart.
-- Checkout process: A simple and secure checkout process that ensures customer satisfaction.
-- Responsive design: Optimized for various devices to ensure an excellent user experience.
+-   Browse products with ease: Search functionality makes it easy for customers to find exactly what they're looking for.
+-   Detailed product pages: Includes comprehensive product descriptions, vivid images, and clear pricing details.
+-   User-friendly shopping cart: Customers can easily add, update, or remove items in their shopping cart.
+-   Checkout process: A simple and secure checkout process that ensures customer satisfaction.
+-   Responsive design: Optimized for various devices to ensure an excellent user experience.
 
 ## Installation & Local Development
 
 Setting up and running this project locally is a straightforward process:
 
 1. **Clone the repository.**
-   ```
-   git clone git@github.com:bokievkhushnud/ecommerce-shop.git
-   ```
+    ```
+    git clone git@github.com:bokievkhushnud/ecommerce-shop.git
+    ```
 2. **Install dependencies.**
    Navigate to the project directory and run:
 
-   ```
-   npm install
-   ```
+    ```
+    npm install
+    ```
 
 3. **Start the application.**
    `     npm start
@@ -65,9 +65,9 @@ This project is built using a variety of modern web development technologies:
 
 This project includes several pre-configured npm scripts for common tasks:
 
-- `npm start`: Starts the development server.
-- `npm run build`: Creates a production-ready build of the project.
-- `npm test`: Runs all unit tests using Jest.
-- `npm run eject`: Removes the single build dependency from your project.
-- `npm run lint`: Lints all applicable files in the `./src` directory using ESLint and automatically fixes any fixable issues.
-- `npm run format`: Formats all applicable files in the `./src` directory using Prettier.
+-   `npm start`: Starts the development server.
+-   `npm run build`: Creates a production-ready build of the project.
+-   `npm test`: Runs all unit tests using Jest.
+-   `npm run eject`: Removes the single build dependency from your project.
+-   `npm run lint`: Lints all applicable files in the `./src` directory using ESLint and automatically fixes any fixable issues.
+-   `npm run format`: Formats all applicable files in the `./src` directory using Prettier.
