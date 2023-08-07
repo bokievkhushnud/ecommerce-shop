@@ -28,12 +28,6 @@
         "format": "prettier --write \"./src/**/*.{js,jsx,ts,tsx,json,css,scss,md}\"",
         "prepare": "husky install"
     },
-    "eslintConfig": {
-        "extends": [
-            "react-app",
-            "react-app/jest"
-        ]
-    },
     "browserslist": {
         "production": [
             ">0.2%",
@@ -49,7 +43,7 @@
     "devDependencies": {
         "eslint-config-prettier": "^9.0.0",
         "eslint-plugin-prettier": "^5.0.0",
-        "prettier": "^3.0.1",
-        "husky": "^8.0.0"
+        "husky": "^8.0.0",
+        "prettier": "^3.0.1"
     }
 }
