@@ -43,7 +43,7 @@ lib-cov
 Thumbs.db
 
 # Public folder (if you don't want to track changes in public folder)
-/public
+
 
 # Storybook build output
 /storybook-static
