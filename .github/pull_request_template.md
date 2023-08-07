@@ -1,21 +1,26 @@
-### Summary
+## Proposed Changes or Summary
 
-Please provide a brief summary of your changes:
+Please describe the changes you are proposing in detail.
 
-### Related Issue(s)
+## Rationale behind the changes
 
-Please link to the related issue(s):
+Provide the reason why these changes are necessary and how they will enhance the functionality of the project.
 
-### How Has This Been Tested?
+## How was it tested?
 
-Please describe how you tested your changes:
+Detail how you tested your changes. 
 
-### Screenshots (if appropriate):
+## Relevance
 
-### Checklist:
-Score: 
-- [ ] My code follows the code style of this project.
-- [ ] My changes require a change to the documentation.
-- [ ] I have updated the documentation accordingly.
-- [ ] I have added tests to cover my changes.
-- [ ] All new and existing tests passed.
+Link the relevant issues, and PRs that are related to these changes. This helps in keeping track of the overall changes and discussions around this feature.
+
+## Checklist
+- [ ] My code follows the code style of this project
+- [ ] I have made the necessary changes and tested them
+- [ ] I have updated the documentation accordingly
+- [ ] I have added tests to cover my changes
+- [ ] All new and existing tests passed
+
+## Screenshots (if applicable)
+
+Attach screenshots that showcase the changes (Especially if it changes the UI)
