@@ -1,13 +1,11 @@
 import './App.css';
+import RegistrationForm from './pages/RegistrationForm';
 
 function App() {
     return (
         <div className="App">
-            <header className="App-header">
-                <h1 className="App-logo">JSdevs</h1>
-                <p>Sprint1</p>
-                <p>Comming soon ...</p>
-            </header>
+            <header></header>
+            <RegistrationForm />
         </div>
     );
 }
