@@ -28,12 +28,18 @@ export default function RegistrationForm() {
                         id="e-mail"
                         className="inpute"
                         placeholder="E-mail"
+                        pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}"
+                        title="Enter your email address"
+                        required
                     />
                     <input
                         type="password"
                         id="password"
                         className="input"
                         placeholder="Password"
+                        pattern="^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*]).{8,}$"
+                        title="Password must be at least 8 characters long and meet the specified requirements"
+                        required
                     />
                     <button id="submitBtn" className="btn">
                         Register
