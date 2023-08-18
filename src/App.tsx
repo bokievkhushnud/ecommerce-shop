@@ -1,17 +1,15 @@
 import React from 'react';
 import { ThemeProvider } from '@mui/material/styles';
-import {
-  createBrowserRouter,
-  RouterProvider,
-  useLoaderData,
-} from 'react-router-dom';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import CssBaseline from '@mui/material/CssBaseline';
 import LoginPage from './pages/Login';
 import RegistrationPage from './pages/Registration';
 import theme from './theme';
 import MainPage from './pages/Main';
-import Navigation from './components/layouts/Navigation';
 import MainLayout from './components/layouts/MainLayout';
+import NotFoundPage from './pages/NotFound';
+import { Provider } from 'react-redux';
+import store from './store/slices/index';
 
 let router = createBrowserRouter([
   {
@@ -38,14 +36,20 @@ let router = createBrowserRouter([
       </MainLayout>
     ),
   },
+  {
+    path: '*',
+    element: <NotFoundPage />,
+  },
 ]);
 
 const App: React.FC = () => {
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <RouterProvider router={router} />
-    </ThemeProvider>
+    <Provider store={store}>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <RouterProvider router={router} />
+      </ThemeProvider>
+    </Provider>
   );
 };
 

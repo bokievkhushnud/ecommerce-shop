@@ -60,7 +60,7 @@ export async function loginUser(
 ) {
   const loginURL = `https://api.${process.env.REACT_APP_REGION}.commercetools.com/${process.env.REACT_APP_PROJECT_KEY}/login`;
 
-  const response = await fetch(loginURL, {
+  return fetch(loginURL, {
     method: 'POST',
     headers: {
       Authorization: `Bearer ${accessToken}`,
@@ -70,14 +70,14 @@ export async function loginUser(
       email: email,
       password: password,
     }),
+  }).then((response) => {
+    if (!response.ok) {
+      return response.json().then((errorData) => {
+        throw new Error(errorData.message || 'Login failed.');
+      });
+    }
+    return response.json();
   });
-
-  if (!response.ok) {
-    throw new Error('Login failed.');
-  }
-
-  const data = await response.json();
-  return data;
 }
 
 export const isTokenExpired = (token: string): boolean => {
