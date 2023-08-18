@@ -6,68 +6,58 @@ import {
   Container,
   Typography,
 } from '@mui/material';
+import {
+  getAccessToken,
+  isTokenExpired,
+  registerCustomer,
+} from '../../services/commercetools';
 import { Link as RouterLink } from 'react-router-dom';
-import axios from 'axios';
 
 const RegistrationForm: React.FC = () => {
-  const [email, setEmail] = useState('');
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [successMessage, setSuccessMessage] = useState('');
+  const [email, setEmail] = useState<string>('');
+  const [firstName, setFirstName] = useState<string>('');
+  const [lastName, setLastName] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const [confirmPassword, setConfirmPassword] = useState<string>('');
+  const [successMessage, setSuccessMessage] = useState<string>('');
+  const [errorMessage, setErrorMessage] = useState<string>('');
 
-  const handleRegistration = async (e: Event) => {
+  const handleRegistration = (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
     e.preventDefault();
     if (password !== confirmPassword) {
-      alert('Passwords do not match!');
+      setErrorMessage('Passwords do not match!');
       return;
     }
 
-    try {
-      // Step 1: Get an access token
-      // const authURL = `https://${process.env.REACT_APP_CLIENT_ID}:${process.env.REACT_APP_CLIENT_SECRET}@auth.${process.env.REACT_APP_REGION}.commercetools.com/oauth/token`;
-      const authURL =
-        'https://PdGVmPTR01lHT-b2ATjQDFJ8:jAQqI_05SgOVeNBI_RA1L5czKHWnuCZA@auth.australia-southeast1.gcp.commercetools.com/oauth/token?grant_type=client_credentials&scope=manage_project:eshop123';
-
-      const tokenResponse = await axios.post(authURL, null, {
-        headers: {
-          'Content-Length': '0',
-          Host: '<calculated when request is sent>',
-        },
-      });
-
-      const accessToken = tokenResponse.data.access_token;
-      console.log('Access token:', accessToken);
-
-      // Step 2: Make the user registration API call using the access token
-      const registrationResponse = await axios.post(
-        'https://api.your-region.commercetools.com/your-project-key/customers',
-        {
-          email,
-          firstName,
-          lastName,
-          password,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
-
-      if (registrationResponse.status === 201) {
-        console.log('Registration response:', registrationResponse.data);
-        setSuccessMessage('Your account has been created successfully!');
-      } else {
-        // Handle any other responses accordingly
-        alert('There was an error with the registration.');
-      }
-    } catch (error) {
-      console.error(
-        'There was an error during the registration process:',
-        error
-      );
+    let token = localStorage.getItem('accessToken') || '';
+    if (!token || isTokenExpired(token)) {
+      getAccessToken()
+        .then((retrievedToken) => {
+          localStorage.setItem('accessToken', retrievedToken);
+          return registerCustomer(
+            email,
+            firstName,
+            lastName,
+            password,
+            retrievedToken
+          );
+        })
+        .then((data) => {
+          setSuccessMessage('Registration successful!');
+        })
+        .catch((error) => {
+          setErrorMessage(error.message || 'An unexpected error occurred.');
+        });
+    } else {
+      registerCustomer(email, firstName, lastName, password, token)
+        .then((data) => {
+          setSuccessMessage('Registration successful!');
+        })
+        .catch((error) => {
+          setErrorMessage(error.message || 'An unexpected error occurred.');
+        });
     }
   };
 
@@ -76,6 +66,16 @@ const RegistrationForm: React.FC = () => {
       <Typography component="h1" variant="h5">
         Registration
       </Typography>
+      {errorMessage && (
+        <Typography color="error" style={{ marginTop: '16px' }}>
+          {errorMessage}
+        </Typography>
+      )}
+      {successMessage && (
+        <Typography color="primary" style={{ marginTop: '16px' }}>
+          {successMessage}
+        </Typography>
+      )}
       <form>
         <TextField
           label="Email"
@@ -124,7 +124,7 @@ const RegistrationForm: React.FC = () => {
           fullWidth
           variant="contained"
           color="primary"
-          onClick={(e) => handleRegistration(e.nativeEvent)}
+          onClick={(e) => handleRegistration(e)}
         >
           Register
         </Button>

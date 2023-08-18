@@ -10,11 +10,26 @@ import LoginPage from './pages/Login';
 import RegistrationPage from './pages/Registration';
 import theme from './theme';
 import MainPage from './pages/Main';
+import Navigation from './components/layouts/Navigation';
 import MainLayout from './components/layouts/MainLayout';
 
 let router = createBrowserRouter([
-  { path: '/login', element: <LoginPage /> },
-  { path: '/registration', element: <RegistrationPage /> },
+  {
+    path: '/login',
+    element: (
+      <MainLayout>
+        <LoginPage />
+      </MainLayout>
+    ),
+  },
+  {
+    path: '/register',
+    element: (
+      <MainLayout>
+        <RegistrationPage />
+      </MainLayout>
+    ),
+  },
   {
     path: '/',
     element: (
