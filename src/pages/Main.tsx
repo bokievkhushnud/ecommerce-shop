@@ -1,8 +1,21 @@
 import React from 'react';
-import { Container, Typography, Box, Button } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Container, Typography, Box, Grid } from '@mui/material';
+import SearchAndFilter from '../components/common/SearchFilter';
+import DiscountBanner from '../components/common/DiscountCoupons';
+import ProductCard from '../components/common/ProductCard';
 
 const MainPage: React.FC = () => {
+  // This data can be fetched from API
+  const products = [
+    {
+      title: 'Sample Product 1',
+      image: 'https://via.placeholder.com/150',
+      description: 'This is a sample product.',
+      price: 29.99,
+    },
+    // ... more products
+  ];
+
   return (
     <Container>
       <Box
@@ -10,15 +23,27 @@ const MainPage: React.FC = () => {
         flexDirection="column"
         alignItems="center"
         justifyContent="center"
-        minHeight="80vh"
+        marginY={4}
       >
         <Typography variant="h3" gutterBottom>
-          Welcome to Our App
+          Welcome to Grandma's Shop
         </Typography>
         <Typography variant="h5" paragraph>
-          Your one-stop solution for XYZ services.
+          We'll remind you of your grandma's cooking.
         </Typography>
       </Box>
+
+      <SearchAndFilter />
+
+      <DiscountBanner />
+
+      <Grid container spacing={2} style={{ marginTop: '20px' }}>
+        {products.map((product, index) => (
+          <Grid item xs={12} sm={6} md={4} key={index}>
+            <ProductCard {...product} />
+          </Grid>
+        ))}
+      </Grid>
     </Container>
   );
 };

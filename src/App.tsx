@@ -4,7 +4,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import CssBaseline from '@mui/material/CssBaseline';
 import LoginPage from './pages/Login';
 import RegistrationPage from './pages/Registration';
-import theme from './theme';
+import theme from './theme/theme';
 import MainPage from './pages/Main';
 import MainLayout from './components/layouts/MainLayout';
 import NotFoundPage from './pages/NotFound';

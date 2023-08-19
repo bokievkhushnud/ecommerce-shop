@@ -16,3 +16,10 @@ export interface AuthState {
   isLoggedIn: boolean;
   userData?: User;
 }
+
+export interface ProductProps {
+  title: string;
+  image: string;
+  description: string;
+  price: number;
+}
