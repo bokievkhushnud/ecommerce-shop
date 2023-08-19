@@ -9,6 +9,7 @@ export default function RegistrationForm() {
         password: '',
         terms: false,
     });
+    const [type, setType] = useState('password');
     function formFormData(event: React.ChangeEvent<HTMLInputElement>) {
         setFormData((prevFormData) => {
             const { name, value, type, checked } = event.target;
@@ -18,9 +19,34 @@ export default function RegistrationForm() {
             };
         });
     }
+    function showPassword() {
+        if (type === 'password') {
+            setType('text');
+        } else {
+            setType('password');
+        }
+    }
     function submitFormData(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
-        console.log(formData);
+        //     const myHeaders = new Headers();
+        //     myHeaders.append(
+        //         'Authorization',
+        //         'Basic UUZScUV1RnQ1NDVjWloyQXREcXE3Y1ZaOnhZcnBoSVVHVWM3b08ydlNDTGNMM1AtQ2kyOGhnU3o4'
+        //     );
+        //     var raw = '';
+        //     var requestOptions = {
+        //         method: 'POST',
+        //         headers: myHeaders,
+        //         body: raw,
+        //         redirect: 'follow',
+        //     };
+        //     fetch(
+        //         'https://auth.us-central1.gcp.commercetools.com/oauth/token?grant_type=client_credentials',
+        //         requestOptions
+        //     )
+        //         .then((response) => response.text())
+        //         .then((result) => console.log(result))
+        //         .catch((error) => console.log('error', error));
     }
     return (
         <div className="modal">
@@ -55,14 +81,14 @@ export default function RegistrationForm() {
                         className="input"
                         placeholder="E-mail"
                         name="email"
-                        pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}"
+                        pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]"
                         title="Enter your email address"
                         required
                         value={formData.email}
                         onChange={formFormData}
                     />
                     <input
-                        type="password"
+                        type={type}
                         id="password"
                         className="input"
                         placeholder="Password"
@@ -73,6 +99,13 @@ export default function RegistrationForm() {
                         value={formData.password}
                         onChange={formFormData}
                     />
+                    <button
+                        id="btnShowPassword"
+                        className="btn-transparent"
+                        onClick={showPassword}
+                    >
+                        &#128065;
+                    </button>
                     <button id="submitBtn" className="btn">
                         Register
                     </button>
