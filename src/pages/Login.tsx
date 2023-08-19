@@ -1,5 +1,8 @@
 import { useEffect, useState } from 'react';
 import React from 'react';
+import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
+import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
+import { IconButton, Input, InputAdornment } from '@mui/material';
 
 const EMAIL_REGEX: RegExp = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/;
 const PWD_REGEX: RegExp =
@@ -17,6 +20,7 @@ const Login: React.FC = (): JSX.Element => {
     const [pwdError, setPwdError] = useState<string>(
         'Please enter your password'
     );
+    const [pwdVisible, setPwdVisible] = useState<boolean>(false);
 
     const [emailAndPwdValid, setEmailAndPwdValid] = useState<boolean>(false);
 
@@ -28,7 +32,9 @@ const Login: React.FC = (): JSX.Element => {
         }
     }, [emailError, pwdError]);
 
-    const emailHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    const emailHandler = (
+        e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    ): void => {
         setEmail(e.target.value);
         if (!EMAIL_REGEX.test(e.target.value)) {
             setEmailError('The email is not valid');
@@ -37,7 +43,9 @@ const Login: React.FC = (): JSX.Element => {
         }
     };
 
-    const pwdHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    const pwdHandler = (
+        e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    ): void => {
         setPwd(e.target.value);
         if (!PWD_REGEX.test(e.target.value)) {
             setPwdError(
@@ -49,7 +57,7 @@ const Login: React.FC = (): JSX.Element => {
     };
 
     const inputBlurHandler = (
-        e: React.FocusEvent<HTMLInputElement, Element>
+        e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement, Element>
     ): void => {
         switch (e.target.name) {
             case 'email':
@@ -66,7 +74,7 @@ const Login: React.FC = (): JSX.Element => {
             <h1>Log in</h1>
             <form>
                 <label htmlFor="userEmail">Your email:</label>
-                <input
+                <Input
                     value={email}
                     onBlur={(e) => inputBlurHandler(e)}
                     onChange={(e) => emailHandler(e)}
@@ -80,13 +88,26 @@ const Login: React.FC = (): JSX.Element => {
                     </p>
                 )}
                 <label htmlFor="userPassword">Password:</label>
-                <input
+                <Input
                     value={pwd}
                     onBlur={(e) => inputBlurHandler(e)}
                     onChange={(e) => pwdHandler(e)}
-                    type="password"
+                    type={pwdVisible ? 'text' : 'password'}
                     id="userPassword"
                     name="password"
+                    endAdornment={
+                        <InputAdornment position="end">
+                            <IconButton
+                                onClick={(): void => setPwdVisible(!pwdVisible)}
+                            >
+                                {pwdVisible ? (
+                                    <VisibilityOutlinedIcon />
+                                ) : (
+                                    <VisibilityOffOutlinedIcon />
+                                )}
+                            </IconButton>
+                        </InputAdornment>
+                    }
                 />
                 {pwdFocus && pwdError && (
                     <p id="pwdErrorNote" className="">
