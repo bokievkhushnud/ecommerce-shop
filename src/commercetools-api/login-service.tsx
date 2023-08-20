@@ -1,14 +1,14 @@
 import { getAccessToken } from './access-token';
 
-interface AnonymousCart {
-    id: string;
-    typeId: string;
-}
+// interface AnonymousCart {
+//     id: string;
+//     typeId: string;
+// }
 
 export async function loginUser(
     email: string,
-    password: string,
-    anonymousCart: AnonymousCart
+    password: string
+    // anonymousCart: AnonymousCart
 ): Promise<void> {
     const loginURL: string = `https://api.${process.env.REACT_APP_REGION}.commercetools.com/${process.env.REACT_APP_PROJECT_KEY}/login`;
     const bearerToken: string = await getAccessToken();
@@ -19,7 +19,7 @@ export async function loginUser(
             Authorization: `Bearer ${bearerToken}`,
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email, password, anonymousCart }),
+        body: JSON.stringify({ email, password }),
     });
 
     if (response.ok) {

@@ -73,11 +73,11 @@ const Login: React.FC = (): JSX.Element => {
     const loginHandler = (e: React.FormEvent) => {
         e.preventDefault();
 
-        const anonymousCartData = {
-            id: '{{cart-id}}',
-            typeId: 'cart',
-        };
-        loginUser(email, pwd, anonymousCartData)
+        // const anonymousCartData = {
+        //     id: '{{cart-id}}',
+        //     typeId: 'cart',
+        // };
+        loginUser(email, pwd)
             .then((data) => {
                 setLoginValid(true);
                 console.log(data);
