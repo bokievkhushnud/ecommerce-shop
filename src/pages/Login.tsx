@@ -2,7 +2,9 @@ import { useEffect, useState } from 'react';
 import React from 'react';
 import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
 import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
+import ErrorOutlineOutlinedIcon from '@mui/icons-material/ErrorOutlineOutlined';
 import { IconButton, Input, InputAdornment } from '@mui/material';
+import { loginUser } from '../commercetools-api/login-service';
 
 const EMAIL_REGEX: RegExp = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/;
 const PWD_REGEX: RegExp =
@@ -14,15 +16,14 @@ const Login: React.FC = (): JSX.Element => {
     const [emailError, setEmailError] = useState<string>(
         'Please enter your email'
     );
-
     const [pwd, setPwd] = useState<string>('');
     const [pwdFocus, setPwdFocus] = useState<boolean>(false);
     const [pwdError, setPwdError] = useState<string>(
         'Please enter your password'
     );
     const [pwdVisible, setPwdVisible] = useState<boolean>(false);
-
     const [emailAndPwdValid, setEmailAndPwdValid] = useState<boolean>(false);
+    const [loginValid, setLoginValid] = useState<boolean>(true);
 
     useEffect(() => {
         if (emailError || pwdError) {
@@ -69,9 +70,36 @@ const Login: React.FC = (): JSX.Element => {
         }
     };
 
+    const loginHandler = (e: React.FormEvent) => {
+        e.preventDefault();
+
+        const anonymousCartData = {
+            id: '{{cart-id}}',
+            typeId: 'cart',
+        };
+        loginUser(email, pwd, anonymousCartData)
+            .then((data) => {
+                setLoginValid(true);
+                console.log(data);
+                //check with registered user
+                //add router link here
+            })
+            .catch(() => {
+                setLoginValid(false);
+            });
+    };
+
     return (
         <div>
             <h1>Log in</h1>
+            {!loginValid && (
+                <div className="">
+                    <ErrorOutlineOutlinedIcon style={{ color: 'red' }} />
+                    <span style={{ color: 'red' }}>
+                        Invalid email or password
+                    </span>
+                </div>
+            )}
             <form>
                 <label htmlFor="userEmail">Your email:</label>
                 <Input
@@ -83,7 +111,11 @@ const Login: React.FC = (): JSX.Element => {
                     name="email"
                 />
                 {emailFocus && emailError && (
-                    <p id="emailErrorNote" className="">
+                    <p
+                        id="emailErrorNote"
+                        className=""
+                        style={{ color: 'red' }}
+                    >
                         {emailError}
                     </p>
                 )}
@@ -110,13 +142,18 @@ const Login: React.FC = (): JSX.Element => {
                     }
                 />
                 {pwdFocus && pwdError && (
-                    <p id="pwdErrorNote" className="">
+                    <p id="pwdErrorNote" className="" style={{ color: 'red' }}>
                         {pwdError}
                     </p>
                 )}
             </form>
-            {/*add button component here*/}
-            <button disabled={!emailAndPwdValid}>Log in</button>
+            <button
+                disabled={!emailAndPwdValid}
+                type="submit"
+                onClick={(e) => loginHandler(e)}
+            >
+                Log in
+            </button>
             <p>
                 Have not registered yet?<span> Sign up </span>
                 <span className="line">
