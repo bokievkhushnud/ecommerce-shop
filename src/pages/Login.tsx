@@ -5,7 +5,7 @@ import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined
 import ErrorOutlineOutlinedIcon from '@mui/icons-material/ErrorOutlineOutlined';
 import { IconButton, Input, InputAdornment } from '@mui/material';
 import { loginUser } from '../commercetools-api/login-service';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const EMAIL_REGEX: RegExp = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/;
 const PWD_REGEX: RegExp =
@@ -91,6 +91,10 @@ const Login: React.FC = (): JSX.Element => {
       });
   };
 
+  const handleRedirect = (e: React.MouseEvent) => {
+    navigate('/registration');
+  };
+
   return (
     <div>
       <h1>Log in</h1>
@@ -151,8 +155,9 @@ const Login: React.FC = (): JSX.Element => {
       <p>
         Have not registered yet?<span> Sign up </span>
         <span className="line">
-          {/*add router link here*/}
-          <a href="https://mail.google.com/">here</a>
+          <Link to="/registration" onClick={(e) => handleRedirect(e)}>
+            Register here
+          </Link>
         </span>
       </p>
     </div>
