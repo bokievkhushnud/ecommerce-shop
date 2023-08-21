@@ -15,6 +15,7 @@ export async function getAccessToken(): Promise<string> {
 
   if (response.ok) {
     const data = await response.json();
+    localStorage.setItem('accessToken', data.access_token);
     return data.access_token;
   } else {
     throw new Error('HTTP Error: ' + response.status);
