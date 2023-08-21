@@ -36,6 +36,13 @@ const Login: React.FC = (): JSX.Element => {
     }
   }, [emailError, pwdError]);
 
+  useEffect(() => {
+    const accessToken = localStorage.getItem('accessToken');
+    if (accessToken) {
+      navigate('/');
+    }
+  }, [navigate]);
+
   const emailHandler = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ): void => {
@@ -83,7 +90,6 @@ const Login: React.FC = (): JSX.Element => {
     loginUser(email, pwd)
       .then((data) => {
         setLoginValid(true);
-        console.log(data);
         navigate('/');
       })
       .catch(() => {
