@@ -12,7 +12,6 @@ export type FormData = {
     street: string;
     email: string;
     password: string;
-    terms: string;
 };
 
 export type httpBody = {
