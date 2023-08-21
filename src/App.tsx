@@ -2,21 +2,31 @@ import React from 'react';
 import { ThemeProvider } from '@mui/material/styles';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import CssBaseline from '@mui/material/CssBaseline';
-import MainLayout from './components/layouts/MainLayout';
-import NotFound from './pages/NotFound';
+import LoginPage from './pages/Login';
 import theme from './theme/theme';
 import MainPage from './pages/MainPage';
-import Login from './pages/Login';
+import MainLayout from './components/layouts/MainLayout';
+import NotFoundPage from './pages/NotFound';
+import { Provider } from 'react-redux';
+import store from './store';
 
 let router = createBrowserRouter([
   {
     path: '/login',
     element: (
       <MainLayout>
-        <Login />
+        <LoginPage />
       </MainLayout>
     ),
   },
+  // {
+  //   path: '/register',
+  //   element: (
+  //     <MainLayout>
+  //       <RegistrationPage />
+  //     </MainLayout>
+  //   ),
+  // },
   {
     path: '/',
     element: (
@@ -27,16 +37,18 @@ let router = createBrowserRouter([
   },
   {
     path: '*',
-    element: <NotFound />,
+    element: <NotFoundPage />,
   },
 ]);
 
 const App: React.FC = () => {
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <RouterProvider router={router} />
-    </ThemeProvider>
+    <Provider store={store}>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <RouterProvider router={router} />
+      </ThemeProvider>
+    </Provider>
   );
 };
 
