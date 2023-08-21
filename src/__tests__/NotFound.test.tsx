@@ -26,14 +26,12 @@ describe('NotFound component', () => {
     });
 
     it('displays explanatory message', () => {
-        const message = getByText(
-            /Oops! It looks like the page you're looking for doesn't exist./i
-        );
-        expect(message).toBeInTheDocument();
-    });
+      const message = getByText(/Oops! It looks like the page you're looking for doesn't exist./i);
+      expect(message).toBeInTheDocument();
+  });
 
-    it('provides a Back to Home button', () => {
-        const button = getByText('Back to Home');
-        expect(button).toBeInTheDocument();
-    });
+  it('provides a Back to Home button', () => {
+      const button = getByText('Back to Home');
+      expect(button).toBeInTheDocument();
+  });
 });
