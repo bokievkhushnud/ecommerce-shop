@@ -80,34 +80,36 @@ export default function RegistrationForm() {
         const requestOptions: Types.httpBody = {
             method: 'POST',
             headers: myHeaders,
-            body: JSON.stringify(formData),
+            body: '',
         };
         fetch(
             'https://auth.us-central1.gcp.commercetools.com/oauth/token?grant_type=client_credentials',
             requestOptions
         )
-            .then((response) => response.text())
-            .then((result) => localStorage.setItem('access_token', formData))
+            .then((response) => response.json())
+            .then((result) =>
+                localStorage.setItem('access_token', result.access_token)
+            )
             .catch((error) => console.log('error', error));
     }
     getToken();
-    // function submitFormData(event: React.FormEvent<HTMLFormElement>): void {
-    //     event.preventDefault();
+    function submitFormData(event: React.FormEvent<HTMLFormElement>): void {
+        event.preventDefault();
 
-    //     Object.entries(formData).forEach((pair) => {
-    //         checkOnValidation(pair[0], pair[1]);
-    //     });
-    //     const hasErrors = Object.values(errors).some((error) => error !== '');
-    //     if (!hasErrors) {
-    //     }
-    // }
+        Object.entries(formData).forEach((pair) => {
+            checkOnValidation(pair[0], pair[1]);
+        });
+        const hasErrors = Object.values(errors).some((error) => error !== '');
+        if (!hasErrors) {
+        }
+    }
     return (
         <div className="modal">
             <div className="modal--window">
                 <div className="window--header">
                     <h3 className="window--header_heading">Sign Up</h3>
                 </div>
-                <form className="signUp-form">
+                <form className="signUp-form" onSubmit={submitFormData}>
                     <div className="personal-info">
                         <input
                             type="text"
@@ -115,6 +117,7 @@ export default function RegistrationForm() {
                             className="input"
                             placeholder="First Name"
                             name="firstName"
+                            required
                             value={formData.firstName}
                             onChange={formFormData}
                         />
@@ -124,6 +127,7 @@ export default function RegistrationForm() {
                             className="input"
                             placeholder="Last Name"
                             name="lastName"
+                            required
                             value={formData.lastName}
                             onChange={formFormData}
                         />
@@ -132,6 +136,7 @@ export default function RegistrationForm() {
                             id="birthdate"
                             className="input"
                             name="birthdate"
+                            required
                             value={formData.birthdate}
                             onChange={formFormData}
                         />
@@ -143,6 +148,7 @@ export default function RegistrationForm() {
                             className="input"
                             placeholder="Country"
                             name="country"
+                            required
                             value={formData.country}
                             onChange={formFormData}
                         />
@@ -152,16 +158,18 @@ export default function RegistrationForm() {
                             className="input"
                             placeholder="City"
                             name="city"
+                            required
                             value={formData.city}
                             onChange={formFormData}
                         />
                         <div className="post-address">
                             <input
                                 type="text"
-                                id="postCode"
+                                id="postalCode"
                                 className="input"
                                 placeholder="Postal Code"
-                                name="postCode"
+                                name="postalCode"
+                                required
                                 value={formData.postalCode}
                                 onChange={formFormData}
                             />
@@ -171,6 +179,7 @@ export default function RegistrationForm() {
                                 className="input"
                                 placeholder="Street, house number"
                                 name="street"
+                                required
                                 value={formData.street}
                                 onChange={formFormData}
                             />
@@ -199,8 +208,8 @@ export default function RegistrationForm() {
                         onChange={formFormData}
                     />
                     <IconButton onClick={showPassword}>{icon}</IconButton>
-                    <button id="submitBtn" className="btn">
-                        Register
+                    <button type="submit" id="submitBtn" className="btn">
+                        Sign Up
                     </button>
                 </form>
             </div>
