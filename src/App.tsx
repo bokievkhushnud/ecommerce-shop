@@ -6,8 +6,17 @@ import MainLayout from './components/layouts/MainLayout';
 import NotFound from './pages/NotFound';
 import theme from './theme/theme';
 import MainPage from './pages/MainPage';
+import Login from './pages/Login';
 
 let router = createBrowserRouter([
+  {
+    path: '/login',
+    element: (
+      <MainLayout>
+        <Login />
+      </MainLayout>
+    ),
+  },
   {
     path: '/',
     element: (
