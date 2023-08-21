@@ -1,15 +1,34 @@
-import './App.css';
+import React from 'react';
+import { ThemeProvider } from '@mui/material/styles';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import CssBaseline from '@mui/material/CssBaseline';
+import MainLayout from './components/layouts/MainLayout';
+import NotFound from './pages/NotFound';
+import theme from './theme/theme';
+import MainPage from './pages/MainPage';
 
-function App() {
+let router = createBrowserRouter([
+    {
+        path: '/',
+        element: (
+            <MainLayout>
+                <MainPage />
+            </MainLayout>
+        ),
+    },
+    {
+        path: '*',
+        element: <NotFound />,
+    },
+]);
+
+const App: React.FC = () => {
     return (
-        <div className="App">
-            <header className="App-header">
-                <h1 className="App-logo">JSdevs</h1>
-                <p>Sprint1</p>
-                <p>Comming soon ...</p>
-            </header>
-        </div>
+        <ThemeProvider theme={theme}>
+            <CssBaseline />
+            <RouterProvider router={router} />
+        </ThemeProvider>
     );
-}
+};
 
 export default App;
