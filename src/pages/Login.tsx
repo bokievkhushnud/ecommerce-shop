@@ -5,12 +5,15 @@ import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined
 import ErrorOutlineOutlinedIcon from '@mui/icons-material/ErrorOutlineOutlined';
 import { IconButton, Input, InputAdornment } from '@mui/material';
 import { loginUser } from '../commercetools-api/login-service';
+import { useNavigate } from 'react-router-dom';
 
 const EMAIL_REGEX: RegExp = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/;
 const PWD_REGEX: RegExp =
   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
 const Login: React.FC = (): JSX.Element => {
+  const navigate = useNavigate();
+
   const [email, setEmail] = useState<string>('');
   const [emailFocus, setEmailFocus] = useState<boolean>(false);
   const [emailError, setEmailError] = useState<string>(
@@ -81,8 +84,7 @@ const Login: React.FC = (): JSX.Element => {
       .then((data) => {
         setLoginValid(true);
         console.log(data);
-        //check with registered user
-        //add router link here
+        navigate('/');
       })
       .catch(() => {
         setLoginValid(false);
