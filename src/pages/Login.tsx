@@ -4,16 +4,15 @@ import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
 import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
 import ErrorOutlineOutlinedIcon from '@mui/icons-material/ErrorOutlineOutlined';
 import { IconButton, Input, InputAdornment } from '@mui/material';
-import { loginUser } from '../commercetools-api/login-service';
+import { loginUser } from '../commercetools-api/loginService';
 import { Link, useNavigate } from 'react-router-dom';
 
 const EMAIL_REGEX: RegExp = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/;
 const PWD_REGEX: RegExp =
   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
-const Login: React.FC = (): JSX.Element => {
+const Login: React.FC = () => {
   const navigate = useNavigate();
-
   const [email, setEmail] = useState<string>('');
   const [emailFocus, setEmailFocus] = useState<boolean>(false);
   const [emailError, setEmailError] = useState<string>(
@@ -35,13 +34,6 @@ const Login: React.FC = (): JSX.Element => {
       setEmailAndPwdValid(true);
     }
   }, [emailError, pwdError]);
-
-  useEffect(() => {
-    const accessToken = localStorage.getItem('accessToken');
-    if (accessToken) {
-      navigate('/');
-    }
-  }, [navigate]);
 
   const emailHandler = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -83,12 +75,9 @@ const Login: React.FC = (): JSX.Element => {
   const loginHandler = (e: React.FormEvent) => {
     e.preventDefault();
 
-    // const anonymousCartData = {
-    //     id: '{{cart-id}}',
-    //     typeId: 'cart',
-    // };
     loginUser(email, pwd)
       .then((data) => {
+        localStorage.setItem('user', JSON.stringify(data));
         setLoginValid(true);
         navigate('/');
       })
