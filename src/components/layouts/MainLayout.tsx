@@ -2,16 +2,16 @@ import React from 'react';
 import Navigation from './Navigation';
 
 type PageWrapperProps = {
-    children: React.ReactNode;
+  children: React.ReactNode;
 };
 
 const MainLayout: React.FC<PageWrapperProps> = ({ children }) => {
-    return (
-        <div>
-            <Navigation />
-            {children}
-        </div>
-    );
+  return (
+    <div>
+      <Navigation />
+      {children}
+    </div>
+  );
 };
 
 export default MainLayout;

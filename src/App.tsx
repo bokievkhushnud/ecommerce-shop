@@ -8,27 +8,27 @@ import theme from './theme/theme';
 import MainPage from './pages/MainPage';
 
 let router = createBrowserRouter([
-    {
-        path: '/',
-        element: (
-            <MainLayout>
-                <MainPage />
-            </MainLayout>
-        ),
-    },
-    {
-        path: '*',
-        element: <NotFound />,
-    },
+  {
+    path: '/',
+    element: (
+      <MainLayout>
+        <MainPage />
+      </MainLayout>
+    ),
+  },
+  {
+    path: '*',
+    element: <NotFound />,
+  },
 ]);
 
 const App: React.FC = () => {
-    return (
-        <ThemeProvider theme={theme}>
-            <CssBaseline />
-            <RouterProvider router={router} />
-        </ThemeProvider>
-    );
+  return (
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <RouterProvider router={router} />
+    </ThemeProvider>
+  );
 };
 
 export default App;
