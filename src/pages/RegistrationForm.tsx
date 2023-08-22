@@ -13,6 +13,8 @@ import {
   Container,
   Box,
   Divider,
+  Checkbox,
+  FormControlLabel,
   Link as MuiLink,
 } from '@mui/material';
 import { Link } from 'react-router-dom';
@@ -37,11 +39,20 @@ const RegistrationForm: React.FC = () => {
     city: '',
     postalCode: '',
     country: '',
+    billingStreet: '',
+    billingCity: '',
+    billingPostalCode: '',
+    billingCountry: '',
   };
 
   const [formData, setFormData] = useState<FormData>(initialFormData);
   const [formErrors, setFormErrors] = useState<FormErrors>({});
   const [pwdVisible, setPwdVisible] = useState<boolean>(false);
+  const [isDefaultShippingAddress, setIsDefaultShippingAddress] =
+    useState(false);
+  const [isDefaultBillingAddress, setIsDefaultBillingAddress] = useState(false);
+  const [isAlsoBillingAddress, setIsAlsoBillingAddress] = useState(false);
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -106,6 +117,19 @@ const RegistrationForm: React.FC = () => {
     }));
   };
 
+  const handleBillingCountryChange = (e: SelectChangeEvent<string>) => {
+    const value = e.target.value;
+    setFormData((prevData) => ({ ...prevData, billingCountry: value }));
+    const postalCodeError = validatePostalCodeForCountry(
+      formData.postalCode,
+      value
+    );
+    setFormErrors((prevErrors) => ({
+      ...prevErrors,
+      billingPostalCode: postalCodeError,
+    }));
+  };
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
 
@@ -135,6 +159,20 @@ const RegistrationForm: React.FC = () => {
       case 'postalCode':
         error = validatePostalCodeForCountry(value, formData.country);
         break;
+      case 'billingStreet':
+        error = validateStreet(value);
+        break;
+      case 'billingCity':
+        error = validateCity(value);
+        break;
+      case 'billingPostalCode':
+        try {
+          error = validatePostalCodeForCountry(value, formData.billingCountry);
+        } catch (e) {
+          console.error(e);
+        }
+        break;
+
       default:
         break;
     }
@@ -143,7 +181,11 @@ const RegistrationForm: React.FC = () => {
   };
 
   const areFieldsFilled = (): boolean => {
-    return Object.values(formData).every((field) => field !== '');
+    return !isAlsoBillingAddress
+      ? Object.values(formData).every((field) => field !== '')
+      : Object.values(formData)
+          .slice(0, 8)
+          .every((field) => field !== '');
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -152,7 +194,12 @@ const RegistrationForm: React.FC = () => {
       Object.values(formErrors).every((error) => !error) &&
       areFieldsFilled()
     ) {
-      registerCustomer(formData)
+      registerCustomer(
+        formData,
+        isDefaultShippingAddress,
+        isDefaultBillingAddress,
+        isAlsoBillingAddress
+      )
         .then((response) => {
           localStorage.setItem('user', JSON.stringify(response));
           dispatch(login(response));
@@ -279,7 +326,7 @@ const RegistrationForm: React.FC = () => {
             {/* Address */}
             <Box mt={4}>
               <Typography variant="h6" gutterBottom>
-                Address
+                Shipping Address
               </Typography>
               <Divider />
               <Box mt={2}>
@@ -336,7 +383,105 @@ const RegistrationForm: React.FC = () => {
                   margin="normal"
                 />
               </Box>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={isDefaultShippingAddress}
+                    onChange={(e) =>
+                      setIsDefaultShippingAddress(e.target.checked)
+                    }
+                    color="primary"
+                  />
+                }
+                label="Set as default address"
+              />
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={isAlsoBillingAddress}
+                    onChange={(e) => setIsAlsoBillingAddress(e.target.checked)}
+                    color="primary"
+                  />
+                }
+                label="Also use this address as my billing address"
+              />
             </Box>
+            {!isAlsoBillingAddress && (
+              <Box mt={4}>
+                <Typography variant="h6" gutterBottom>
+                  Billing Address
+                </Typography>
+                <Divider />
+                <Box mt={2}>
+                  <FormControl variant="outlined" fullWidth margin="normal">
+                    <InputLabel id="country-label">Country</InputLabel>
+                    <Select
+                      labelId="country-label"
+                      name="billingCountry"
+                      value={formData.billingCountry}
+                      onChange={handleBillingCountryChange}
+                      label="Country"
+                    >
+                      <MenuItem value={'US'}>United States</MenuItem>
+                      <MenuItem value={'CA'}>Canada</MenuItem>
+                    </Select>
+                    {!!formErrors.billingCountry && (
+                      <Typography color="error">
+                        {formErrors.billingCountry}
+                      </Typography>
+                    )}
+                  </FormControl>
+
+                  <TextField
+                    name="billingCity"
+                    label="City"
+                    value={formData.billingCity}
+                    onChange={handleInputChange}
+                    error={!!formErrors.billingCity}
+                    helperText={formErrors.billingCity}
+                    variant="outlined"
+                    fullWidth
+                    margin="normal"
+                  />
+
+                  <TextField
+                    name="billingStreet"
+                    label="Street"
+                    value={formData.billingStreet}
+                    onChange={handleInputChange}
+                    error={!!formErrors.billingStreet}
+                    helperText={formErrors.billingStreet}
+                    variant="outlined"
+                    fullWidth
+                    margin="normal"
+                  />
+
+                  <TextField
+                    name="billingPostalCode"
+                    label="Postal Code"
+                    value={formData.billingPostalCode}
+                    onChange={handleInputChange}
+                    error={!!formErrors.billingPostalCode}
+                    helperText={formErrors.billingPostalCode}
+                    variant="outlined"
+                    fullWidth
+                    margin="normal"
+                  />
+                </Box>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={isDefaultBillingAddress}
+                      onChange={(e) =>
+                        setIsDefaultBillingAddress(e.target.checked)
+                      }
+                      color="primary"
+                    />
+                  }
+                  label="Set as default address"
+                />
+              </Box>
+            )}
 
             {/* Submit Button */}
             <Box mt={4}>
@@ -347,8 +492,9 @@ const RegistrationForm: React.FC = () => {
                 fullWidth
                 disabled={
                   !(
-                    Object.values(formErrors).every((error) => !error) &&
-                    areFieldsFilled()
+                    Object.values(formErrors)
+                      .slice(0, 8)
+                      .every((error) => !error) && areFieldsFilled()
                   )
                 }
               >

@@ -8,6 +8,10 @@ export type FormData = {
   city: string;
   postalCode: string;
   country: string;
+  billingCountry: string;
+  billingCity?: string;
+  billingStreet?: string;
+  billingPostalCode?: string;
 };
 
 export type FormErrors = {
