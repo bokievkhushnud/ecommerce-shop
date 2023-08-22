@@ -13,6 +13,7 @@ import MainLayout from './components/layouts/MainLayout';
 import NotFoundPage from './pages/NotFound';
 import { useSelector } from 'react-redux';
 import { RootState } from './store';
+import { ToastContainer } from 'react-toastify';
 
 const App: React.FC = () => {
   const isLoggedIn = useSelector((state: RootState) => state.auth.isLoggedIn);
@@ -52,6 +53,7 @@ const App: React.FC = () => {
 
   return (
     <ThemeProvider theme={theme}>
+      <ToastContainer />
       <CssBaseline />
       <RouterProvider router={router}></RouterProvider>
     </ThemeProvider>

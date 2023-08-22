@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import 'react-toastify/dist/ReactToastify.css';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 
 import {
   Card,
@@ -103,6 +103,7 @@ const Login: React.FC = () => {
         localStorage.setItem('user', JSON.stringify(data));
         dispatch(login(data));
         navigate('/');
+        toast.success('Successfully logged in');
       })
       .catch(() => {
         toast.error('Invalid email or password');
@@ -122,7 +123,6 @@ const Login: React.FC = () => {
         height: '100vh',
       }}
     >
-      <ToastContainer />
       <Card variant="outlined" style={{ minWidth: 300, padding: '20px' }}>
         <CardContent>
           <Typography variant="h4" gutterBottom>
