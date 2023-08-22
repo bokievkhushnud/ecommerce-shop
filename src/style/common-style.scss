@@ -1,0 +1,22 @@
+// --- COLORS ---
+$clr-white: #fff;
+$clr-paleYellow: #fcff63;
+$clr-green: rgb(161, 255, 106);
+$clr-orange: rgb(223, 102, 21);
+
+@font-face {
+    font-family: 'Neucha';
+    src: url('../assets/fonts/Neucha/Neucha.woff2') format('woff2')
+        url('../assets/fonts/Neucha/Neucha.woff') format('woff')
+        url('../assets/fonts/Neucha/Neucha.ttf') format('ttf');
+}
+
+@font-face {
+    font-family: 'Roboto';
+    src: url('../assets/fonts/Roboto/Roboto.ttf') format('ttf')
+        url('../assets/fonts/Roboto/v.woff') format('woff')
+        url('../assets/fonts/Roboto/Roboto.woff2') format('woff2');
+}
+
+$ff-neucha: 'Neucha';
+$ff-roboto: 'Roboto';
