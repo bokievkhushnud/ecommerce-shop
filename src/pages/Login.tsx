@@ -18,7 +18,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { login } from '../store/authSlice';
 
-const EMAIL_REGEX: RegExp = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/;
+const EMAIL_REGEX: RegExp = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
@@ -47,12 +47,12 @@ const Login: React.FC = () => {
   const emailHandler = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ): void => {
-    setEmail(e.target.value);
-    if (!EMAIL_REGEX.test(e.target.value)) {
-      setEmailError('The email is not valid');
-    } else {
-      setEmailError('');
-    }
+    let input = e.target.value;
+    console.log(e.target.value);
+    setEmail(input);
+    EMAIL_REGEX.test(e.target.value)
+      ? setEmailError('')
+      : setEmailError('Please enter a valid email');
     inputBlurHandler(e.target.name);
   };
 
@@ -131,7 +131,6 @@ const Login: React.FC = () => {
               id="userEmail"
               name="email"
               label="Your email"
-              type="email"
               value={email}
               error={emailFocus && !!emailError}
               helperText={emailFocus && emailError}

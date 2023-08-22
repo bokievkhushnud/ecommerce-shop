@@ -32,7 +32,9 @@ const App: React.FC = () => {
     },
     {
       path: '/register',
-      element: (
+      element: isLoggedIn ? (
+        <Navigate to="/" replace />
+      ) : (
         <MainLayout>
           <RegistrationForm />
         </MainLayout>

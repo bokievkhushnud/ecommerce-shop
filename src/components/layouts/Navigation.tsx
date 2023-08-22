@@ -19,7 +19,7 @@ import { logout } from '../../store/authSlice';
 import { RootState } from '../../store';
 
 const pages = [
-  { path: '/products', name: 'Products' },
+  { path: '/', name: 'Home' },
   { path: '/cart', name: 'Cart' },
 ];
 
@@ -125,7 +125,7 @@ const ResponsiveAppBar: React.FC = () => {
                   <Typography textAlign="center">Login</Typography>
                 </MenuItem>
               }
-              {!isLoggedIn && (
+              {
                 <MenuItem
                   key="Register"
                   onClick={() => {
@@ -135,7 +135,7 @@ const ResponsiveAppBar: React.FC = () => {
                 >
                   <Typography textAlign="center">Register</Typography>
                 </MenuItem>
-              )}
+              }
             </Menu>
           </Box>
           <LunchDiningOutlinedIcon
@@ -185,7 +185,7 @@ const ResponsiveAppBar: React.FC = () => {
                 Login
               </Button>
             }
-            {!isLoggedIn && (
+            {
               <Button
                 key="Register"
                 onClick={() => {
@@ -196,7 +196,7 @@ const ResponsiveAppBar: React.FC = () => {
               >
                 Register
               </Button>
-            )}
+            }
           </Box>
 
           {isLoggedIn && (
