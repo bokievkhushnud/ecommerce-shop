@@ -13,17 +13,22 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import LunchDiningOutlinedIcon from '@mui/icons-material/LunchDiningOutlined';
 import { useNavigate } from 'react-router-dom';
+import { handleLogout } from '../../utils/auth';
+import { useDispatch, useSelector } from 'react-redux';
+import { logout } from '../../store/authSlice';
+import { RootState } from '../../store';
 
 const pages = [
   { path: '/products', name: 'Products' },
   { path: '/cart', name: 'Cart' },
 ];
 
-const Navigation: React.FC = () => {
+const ResponsiveAppBar: React.FC = () => {
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
   const navigate = useNavigate();
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const dispatch = useDispatch();
+  const isLoggedIn = useSelector((state: RootState) => state.auth.isLoggedIn);
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
@@ -38,10 +43,6 @@ const Navigation: React.FC = () => {
 
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
-  };
-
-  const handleLogout = () => {
-    setIsLoggedIn(!isLoggedIn);
   };
 
   return (
@@ -73,12 +74,7 @@ const Navigation: React.FC = () => {
             Grandma's Busket
           </Typography>
 
-          <Box
-            sx={{
-              flexGrow: 1,
-              display: { xs: 'flex', md: 'none' },
-            }}
-          >
+          <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
             <IconButton
               size="large"
               aria-label="account of current user"
@@ -164,12 +160,7 @@ const Navigation: React.FC = () => {
           >
             Grandma's Busket
           </Typography>
-          <Box
-            sx={{
-              flexGrow: 1,
-              display: { xs: 'none', md: 'flex' },
-            }}
-          >
+          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
               <Button
                 key={page.name}
@@ -244,6 +235,7 @@ const Navigation: React.FC = () => {
                   key="Logout"
                   onClick={() => {
                     handleLogout();
+                    dispatch(logout());
                     handleCloseUserMenu();
                   }}
                 >
@@ -257,4 +249,4 @@ const Navigation: React.FC = () => {
     </AppBar>
   );
 };
-export default Navigation;
+export default ResponsiveAppBar;

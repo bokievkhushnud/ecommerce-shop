@@ -1,41 +1,59 @@
 import React from 'react';
 import { ThemeProvider } from '@mui/material/styles';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import {
+  createBrowserRouter,
+  Navigate,
+  RouterProvider,
+} from 'react-router-dom';
 import CssBaseline from '@mui/material/CssBaseline';
-import MainLayout from './components/layouts/MainLayout';
-import NotFound from './pages/NotFound';
+import LoginPage from './pages/Login';
 import theme from './theme/theme';
 import MainPage from './pages/MainPage';
-import Login from './pages/Login';
-
-let router = createBrowserRouter([
-  {
-    path: '/login',
-    element: (
-      <MainLayout>
-        <Login />
-      </MainLayout>
-    ),
-  },
-  {
-    path: '/',
-    element: (
-      <MainLayout>
-        <MainPage />
-      </MainLayout>
-    ),
-  },
-  {
-    path: '*',
-    element: <NotFound />,
-  },
-]);
+import MainLayout from './components/layouts/MainLayout';
+import NotFoundPage from './pages/NotFound';
+import { useSelector } from 'react-redux';
+import { RootState } from './store';
 
 const App: React.FC = () => {
+  const isLoggedIn = useSelector((state: RootState) => state.auth.isLoggedIn);
+
+  let router = createBrowserRouter([
+    {
+      path: '/login',
+      element: isLoggedIn ? (
+        <Navigate to="/" replace />
+      ) : (
+        <MainLayout>
+          <LoginPage />
+        </MainLayout>
+      ),
+    },
+    // {
+    //   path: '/register',
+    //   element: (
+    //     <MainLayout>
+    //       <RegistrationPage />
+    //     </MainLayout>
+    //   ),
+    // },
+    {
+      path: '/',
+      element: (
+        <MainLayout>
+          <MainPage />
+        </MainLayout>
+      ),
+    },
+    {
+      path: '*',
+      element: <NotFoundPage />,
+    },
+  ]);
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <RouterProvider router={router} />
+      <RouterProvider router={router}></RouterProvider>
     </ThemeProvider>
   );
 };

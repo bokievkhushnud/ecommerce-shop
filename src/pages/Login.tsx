@@ -6,6 +6,8 @@ import ErrorOutlineOutlinedIcon from '@mui/icons-material/ErrorOutlineOutlined';
 import { IconButton, Input, InputAdornment } from '@mui/material';
 import { loginUser } from '../commercetools-api/loginService';
 import { Link, useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { login } from '../store/authSlice';
 
 const EMAIL_REGEX: RegExp = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/;
 const PWD_REGEX: RegExp =
@@ -26,6 +28,7 @@ const Login: React.FC = () => {
   const [pwdVisible, setPwdVisible] = useState<boolean>(false);
   const [emailAndPwdValid, setEmailAndPwdValid] = useState<boolean>(false);
   const [loginValid, setLoginValid] = useState<boolean>(true);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (emailError || pwdError) {
@@ -79,6 +82,7 @@ const Login: React.FC = () => {
       .then((data) => {
         localStorage.setItem('user', JSON.stringify(data));
         setLoginValid(true);
+        dispatch(login(data));
         navigate('/');
       })
       .catch(() => {
