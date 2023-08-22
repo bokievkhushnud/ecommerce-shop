@@ -1,23 +1,19 @@
-export type FormErrors = {
-    [key: string]: string;
-};
-
 export type FormData = {
-    firstName: string;
-    lastName: string;
-    birthdate: string;
-    country: string;
-    city: string;
-    postalCode: string;
-    street: string;
-    house: string;
-    apartment: string;
-    email: string;
-    password: string;
+  email: string;
+  password: string;
+  firstName: string;
+  lastName: string;
+  dob: string;
+  street: string;
+  city: string;
+  postalCode: string;
+  country: string;
+  billingCountry: string;
+  billingCity?: string;
+  billingStreet?: string;
+  billingPostalCode?: string;
 };
 
-export type httpBody = {
-    method: string;
-    headers: Headers;
-    body: string;
+export type FormErrors = {
+  [K in keyof FormData]?: string;
 };
