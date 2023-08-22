@@ -32,8 +32,19 @@ export default function RegistrationForm() {
     });
 
     async function getToken() {
+        const myHeaders = new Headers();
+        myHeaders.append(
+            'Authorization',
+            'Basic UUZScUV1RnQ1NDVjWloyQXREcXE3Y1ZaOnhZcnBoSVVHVWM3b08ydlNDTGNMM1AtQ2kyOGhnU3o4'
+        );
+        const requestOptions: Types.httpBody = {
+            method: 'POST',
+            headers: myHeaders,
+            body: '',
+        };
         await fetch(
-            'https://auth.us-central1.gcp.commercetools.com/oauth/token?grant_type=client_credentials'
+            'https://auth.us-central1.gcp.commercetools.com/oauth/token?grant_type=client_credentials',
+            requestOptions
         )
             .then((response) => response.json())
             .then((result) => {
@@ -42,6 +53,7 @@ export default function RegistrationForm() {
             .catch((error) => console.log('error', error));
     }
     getToken();
+
     function formFormData(event: React.ChangeEvent<HTMLInputElement>): void {
         setFormData((prevFormData) => {
             const { name, value, type, checked } = event.target;
@@ -51,6 +63,25 @@ export default function RegistrationForm() {
             };
         });
     }
+    function selectFormData(event: React.ChangeEvent<HTMLSelectElement>): void {
+        setFormData((prevFormData) => {
+            return {
+                ...prevFormData,
+                country: event.target.value,
+            };
+        });
+    }
+
+    const [errFirstName, setErrFirstName] = useState('');
+    const [errLastName, setErrLastName] = useState('');
+    const [errEmail, setErrEmail] = useState('');
+    const [errPassword, setErrPassword] = useState('');
+    const [errBirthdate, setErrBirthdate] = useState('');
+    const [errStreet, setErrStreet] = useState('');
+    const [errCity, setErrCity] = useState('');
+    const [errPostalCode, setErrPostalCode] = useState('');
+    const [errCountry, setErrCountry] = useState('');
+
     function checkOnValidation(
         name: keyof Types.FormData | string,
         value: string
@@ -58,55 +89,49 @@ export default function RegistrationForm() {
         let errorMessage = '';
 
         if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-            // errorMessage = 'Invalid email address';
-            errors.email = 'Invalid email address';
+            setErrEmail('Invalid email address');
         }
         if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}/.test(formData.password)) {
-            // errorMessage = 'Invalid password format';
-            errors.password = 'Invalid password format';
+            setErrPassword('Invalid password format');
         }
         if (!/^[A-Za-z]+$/.test(formData.firstName)) {
-            // errorMessage = 'Invalid first name';
-            errors.firstName = 'Invalid first name';
+            setErrFirstName('Invalid first name');
         }
         if (!/^[A-Za-z]+$/.test(formData.lastName)) {
-            // errorMessage = 'Invalid last name';
-            errors.lastName = 'Invalid last name';
+            setErrLastName('Invalid last name');
         }
         const dob = new Date(formData.birthdate);
         const thirteenYearsAgo = new Date();
         thirteenYearsAgo.setFullYear(thirteenYearsAgo.getFullYear() - 13);
         if (dob >= thirteenYearsAgo) {
-            // errorMessage = 'You must be at least 13 years old';
-            errors.birthdate = 'You must be at least 13 years old';
+            setErrBirthdate('You must be at least 13 years old');
         }
         if (formData.street.trim() === '') {
-            // errorMessage = 'Street is required';
-            errors.street = 'Street is required';
+            setErrStreet('Street is required');
         }
         if (!/^[A-Za-z\s]+$/.test(formData.city)) {
-            // errorMessage = 'Invalid city name';
-            errors.city = 'Invalid city name';
+            setErrCity('Invalid city name');
         }
-        if (!/^[A-Za-z0-9\s]+$/.test(formData.postalCode)) {
-            // errorMessage = 'Invalid postal code';
-            errors.postalCode = 'Invalid postal code';
+        if (!/^[0-9\s]+$/.test(formData.postalCode)) {
+            setErrPostalCode('Invalid postal code');
+        }
+        if (formData.country.trim() === '') {
+            setErrCountry('Choose a country');
         }
 
         setErrors((prevErrors) => ({
             ...prevErrors,
             [name]: errorMessage,
         }));
-        console.log(errors);
     }
     function showPassword(event: React.MouseEvent<HTMLButtonElement>): void {
         event.preventDefault();
         if (type === 'password') {
             setType('text');
-            setIcon(<VisibilityOffSharp />);
+            setIcon(<RemoveRedEyeSharp />);
         } else {
             setType('password');
-            setIcon(<RemoveRedEyeSharp />);
+            setIcon(<VisibilityOffSharp />);
         }
     }
     async function submitFormData(event: React.FormEvent<HTMLFormElement>) {
@@ -158,7 +183,7 @@ export default function RegistrationForm() {
                                 onChange={formFormData}
                             />
                             <label htmlFor="firstName" className="label">
-                                {errors.firstName}
+                                {errFirstName}
                             </label>
                         </div>
                         <div className="input-block">
@@ -173,7 +198,7 @@ export default function RegistrationForm() {
                                 onChange={formFormData}
                             />
                             <label htmlFor="lastName" className="label">
-                                {errors.lastName}
+                                {errLastName}
                             </label>
                         </div>
                         <div className="input-block">
@@ -187,24 +212,19 @@ export default function RegistrationForm() {
                                 onChange={formFormData}
                             />
                             <label htmlFor="birthdate" className="label">
-                                {errors.birthdate}
+                                {errBirthdate}
                             </label>
                         </div>
                     </div>
                     <div className="address">
                         <div className="input-block">
-                            <input
-                                type="text"
-                                id="country"
-                                className="input"
-                                placeholder="Country"
-                                name="country"
-                                required
-                                value={formData.country}
-                                onChange={formFormData}
-                            />
+                            <select onChange={selectFormData}>
+                                <option disabled>Select Country...</option>
+                                <option value="USA">USA</option>
+                                <option value="other">Other...</option>
+                            </select>
                             <label htmlFor="country" className="label">
-                                {errors.country}
+                                {errCountry}
                             </label>
                         </div>
                         <div className="input-block">
@@ -219,7 +239,7 @@ export default function RegistrationForm() {
                                 onChange={formFormData}
                             />
                             <label htmlFor="city" className="label">
-                                {errors.city}
+                                {errCity}
                             </label>
                         </div>
                         <div className="post-address">
@@ -235,7 +255,7 @@ export default function RegistrationForm() {
                                     onChange={formFormData}
                                 />
                                 <label htmlFor="postalCode" className="label">
-                                    {errors.postalCode}
+                                    {errPostalCode}
                                 </label>
                             </div>
                             <div className="input-block">
@@ -250,7 +270,7 @@ export default function RegistrationForm() {
                                     onChange={formFormData}
                                 />
                                 <label htmlFor="street" className="label">
-                                    {errors.street}
+                                    {errStreet}
                                 </label>
                             </div>
                         </div>
@@ -267,7 +287,7 @@ export default function RegistrationForm() {
                         onChange={formFormData}
                     />
                     <label htmlFor="email" className="label">
-                        {errors.email}
+                        {errEmail}
                     </label>
                     <input
                         type={type}
@@ -281,7 +301,7 @@ export default function RegistrationForm() {
                         onChange={formFormData}
                     />
                     <label htmlFor="password" className="label">
-                        {errors.password}
+                        {errPassword}
                     </label>
                     <IconButton onClick={showPassword}>{icon}</IconButton>
                     <button type="submit" id="submitBtn" className="btn">
