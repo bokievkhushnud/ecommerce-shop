@@ -14,6 +14,7 @@ import NotFoundPage from './pages/NotFound';
 import { useSelector } from 'react-redux';
 import { RootState } from './store';
 import { ToastContainer } from 'react-toastify';
+import RegistrationForm from './pages/RegistrationForm';
 
 const App: React.FC = () => {
   const isLoggedIn = useSelector((state: RootState) => state.auth.isLoggedIn);
@@ -29,14 +30,14 @@ const App: React.FC = () => {
         </MainLayout>
       ),
     },
-    // {
-    //   path: '/register',
-    //   element: (
-    //     <MainLayout>
-    //       <RegistrationPage />
-    //     </MainLayout>
-    //   ),
-    // },
+    {
+      path: '/register',
+      element: (
+        <MainLayout>
+          <RegistrationForm />
+        </MainLayout>
+      ),
+    },
     {
       path: '/',
       element: (

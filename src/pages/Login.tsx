@@ -110,10 +110,6 @@ const Login: React.FC = () => {
       });
   };
 
-  const handleRedirect = (e: React.MouseEvent) => {
-    navigate('/registration');
-  };
-
   return (
     <div
       style={{
@@ -195,11 +191,7 @@ const Login: React.FC = () => {
           </form>
           <Typography style={{ marginTop: '20px' }}>
             Have not registered yet?&nbsp;
-            <MuiLink
-              component={Link}
-              to="/registration"
-              onClick={handleRedirect}
-            >
+            <MuiLink component={Link} to="/register">
               Register here
             </MuiLink>
           </Typography>
