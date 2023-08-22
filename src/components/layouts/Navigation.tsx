@@ -114,7 +114,7 @@ const ResponsiveAppBar: React.FC = () => {
                   <Typography textAlign="center">{page.name}</Typography>
                 </MenuItem>
               ))}
-              {!isLoggedIn && (
+              {
                 <MenuItem
                   key="Login"
                   onClick={() => {
@@ -124,7 +124,7 @@ const ResponsiveAppBar: React.FC = () => {
                 >
                   <Typography textAlign="center">Login</Typography>
                 </MenuItem>
-              )}
+              }
               {!isLoggedIn && (
                 <MenuItem
                   key="Register"
@@ -173,7 +173,7 @@ const ResponsiveAppBar: React.FC = () => {
                 {page.name}
               </Button>
             ))}
-            {!isLoggedIn && (
+            {
               <Button
                 key="Login"
                 onClick={() => {
@@ -184,7 +184,7 @@ const ResponsiveAppBar: React.FC = () => {
               >
                 Login
               </Button>
-            )}
+            }
             {!isLoggedIn && (
               <Button
                 key="Register"
