@@ -15,6 +15,8 @@ export default function RegistrationForm() {
         city: '',
         postalCode: '',
         street: '',
+        house: '',
+        apartment: '',
         email: '',
         password: '',
     });
@@ -27,6 +29,8 @@ export default function RegistrationForm() {
         city: '',
         postalCode: '',
         street: '',
+        house: '',
+        apartment: '',
         email: '',
         password: '',
     });
@@ -78,6 +82,8 @@ export default function RegistrationForm() {
     const [errPassword, setErrPassword] = useState('');
     const [errBirthdate, setErrBirthdate] = useState('');
     const [errStreet, setErrStreet] = useState('');
+    const [errHouse, setErrHouse] = useState('');
+    const [errApartment, setErrApartment] = useState('');
     const [errCity, setErrCity] = useState('');
     const [errPostalCode, setErrPostalCode] = useState('');
     const [errCountry, setErrCountry] = useState('');
@@ -108,6 +114,18 @@ export default function RegistrationForm() {
         }
         if (formData.street.trim() === '') {
             setErrStreet('Street is required');
+        }
+        if (!/^[0-9\s]+$/.test(formData.postalCode)) {
+            setErrPostalCode('Postal Code is required');
+        }
+        if (!/^[0-9\s]+$/.test(formData.house)) {
+            setErrHouse('House is required');
+        }
+        if (
+            !/^[0-9\s]+$/.test(formData.apartment) ||
+            formData.apartment.trim() === ''
+        ) {
+            setErrApartment('Enter number of apartment');
         }
         if (!/^[A-Za-z\s]+$/.test(formData.city)) {
             setErrCity('Invalid city name');
@@ -164,14 +182,22 @@ export default function RegistrationForm() {
     }
 
     return (
-        <div className="modal">
-            <div className="modal--window">
-                <div className="window--header">
-                    <h3 className="window--header_heading">Sign Up</h3>
+        <div className="signUp">
+            <div className="signUp--window">
+                <div className="signUp--header">
+                    <h3 className="signUp--header_heading">Sign Up</h3>
                 </div>
-                <form className="signUp-form" onSubmit={submitFormData}>
+                <form
+                    className="signUp-form"
+                    onSubmit={submitFormData}
+                    noValidate
+                >
                     <div className="personal-info">
+                        <h3 className="form-heading">Personal Info</h3>
                         <div className="input-block">
+                            <label htmlFor="firstName" className="label">
+                                Name
+                            </label>
                             <input
                                 type="text"
                                 id="firstName"
@@ -182,11 +208,10 @@ export default function RegistrationForm() {
                                 value={formData.firstName}
                                 onChange={formFormData}
                             />
-                            <label htmlFor="firstName" className="label">
-                                {errFirstName}
-                            </label>
+                            <p className="error-message">{errFirstName}</p>
                         </div>
                         <div className="input-block">
+                            <label htmlFor="lastName" className="label"></label>
                             <input
                                 type="text"
                                 id="lastName"
@@ -197,11 +222,12 @@ export default function RegistrationForm() {
                                 value={formData.lastName}
                                 onChange={formFormData}
                             />
-                            <label htmlFor="lastName" className="label">
-                                {errLastName}
-                            </label>
+                            <p className="error-message">{errLastName}</p>
                         </div>
                         <div className="input-block">
+                            <label htmlFor="birthdate" className="label">
+                                Date of Birth
+                            </label>
                             <input
                                 type="date"
                                 id="birthdate"
@@ -211,23 +237,33 @@ export default function RegistrationForm() {
                                 value={formData.birthdate}
                                 onChange={formFormData}
                             />
-                            <label htmlFor="birthdate" className="label">
-                                {errBirthdate}
-                            </label>
+                            <p className="error-message">{errBirthdate}</p>
                         </div>
                     </div>
                     <div className="address">
+                        <h3 className="address-info">Address</h3>
+                        <label
+                            htmlFor="defaultAddress"
+                            className="label-default"
+                        >
+                            Set as default address
+                        </label>
+                        <input type="checkbox" id="defaultAddress" />
                         <div className="input-block">
-                            <select onChange={selectFormData}>
+                            <label htmlFor="country" className="label">
+                                Country
+                            </label>
+                            <select id="country" onChange={selectFormData}>
                                 <option disabled>Select Country...</option>
                                 <option value="USA">USA</option>
                                 <option value="other">Other...</option>
                             </select>
-                            <label htmlFor="country" className="label">
-                                {errCountry}
-                            </label>
+                            <p className="error-message">{errCountry}</p>
                         </div>
                         <div className="input-block">
+                            <label htmlFor="city" className="label">
+                                City
+                            </label>
                             <input
                                 type="text"
                                 id="city"
@@ -238,11 +274,12 @@ export default function RegistrationForm() {
                                 value={formData.city}
                                 onChange={formFormData}
                             />
-                            <label htmlFor="city" className="label">
-                                {errCity}
-                            </label>
+                            <p className="error-message">{errCity}</p>
                         </div>
                         <div className="post-address">
+                            <label htmlFor="postalCode" className="label">
+                                Postal Code
+                            </label>
                             <div className="input-block">
                                 <input
                                     type="text"
@@ -254,55 +291,85 @@ export default function RegistrationForm() {
                                     value={formData.postalCode}
                                     onChange={formFormData}
                                 />
-                                <label htmlFor="postalCode" className="label">
-                                    {errPostalCode}
-                                </label>
+                                <p className="error-message">{errPostalCode}</p>
                             </div>
                             <div className="input-block">
+                                <label htmlFor="street" className="label">
+                                    Street
+                                </label>
                                 <input
                                     type="text"
                                     id="street"
                                     className="input"
-                                    placeholder="Street, house number"
+                                    placeholder="Street"
                                     name="street"
                                     required
                                     value={formData.street}
                                     onChange={formFormData}
                                 />
-                                <label htmlFor="street" className="label">
-                                    {errStreet}
+                                <p className="error-message">{errStreet}</p>
+                                <label htmlFor="house" className="label">
+                                    House
                                 </label>
+                                <input
+                                    type="text"
+                                    id="house"
+                                    className="input"
+                                    placeholder="House"
+                                    name="house"
+                                    required
+                                    value={formData.street}
+                                    onChange={formFormData}
+                                />
+                                <p className="error-message">{errHouse}</p>
+                                <label htmlFor="apartment" className="label">
+                                    Apartment
+                                </label>
+                                <input
+                                    type="text"
+                                    id="apartment"
+                                    className="input"
+                                    placeholder="Apartment"
+                                    name="apartment"
+                                    value={formData.street}
+                                    onChange={formFormData}
+                                />
+                                <p className="error-message">{errApartment}</p>
                             </div>
                         </div>
                     </div>
-                    <input
-                        type="text"
-                        id="email"
-                        className="input"
-                        placeholder="E-mail"
-                        name="email"
-                        title="Enter your email address"
-                        required
-                        value={formData.email}
-                        onChange={formFormData}
-                    />
-                    <label htmlFor="email" className="label">
-                        {errEmail}
-                    </label>
-                    <input
-                        type={type}
-                        id="password"
-                        className="input"
-                        placeholder="Password"
-                        name="password"
-                        title="Password must be at least 8 characters long and meet the specified requirements"
-                        required
-                        value={formData.password}
-                        onChange={formFormData}
-                    />
-                    <label htmlFor="password" className="label">
-                        {errPassword}
-                    </label>
+                    <div className="credentials">
+                        <label htmlFor="email" className="label">
+                            Email
+                        </label>
+                        <input
+                            type="text"
+                            id="email"
+                            className="input"
+                            placeholder="E-mail"
+                            name="email"
+                            title="Enter your email address"
+                            required
+                            value={formData.email}
+                            onChange={formFormData}
+                        />
+                        <p className="error-message">{errEmail}</p>
+                        <label htmlFor="password" className="label">
+                            Password
+                        </label>
+                        <input
+                            type={type}
+                            id="password"
+                            className="input"
+                            placeholder="Password"
+                            name="password"
+                            title="Password must be at least 8 characters long and meet the specified requirements"
+                            required
+                            value={formData.password}
+                            onChange={formFormData}
+                        />
+                        <p className="error-message">{errPassword}</p>
+                    </div>
                     <IconButton onClick={showPassword}>{icon}</IconButton>
                     <button type="submit" id="submitBtn" className="btn">
                         Sign Up

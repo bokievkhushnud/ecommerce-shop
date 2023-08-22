@@ -10,6 +10,8 @@ export type FormData = {
     city: string;
     postalCode: string;
     street: string;
+    house: string;
+    apartment: string;
     email: string;
     password: string;
 };
