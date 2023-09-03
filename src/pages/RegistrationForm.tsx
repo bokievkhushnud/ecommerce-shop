@@ -393,7 +393,7 @@ const RegistrationForm: React.FC = () => {
                     color="primary"
                   />
                 }
-                label="Set as default address"
+                label="Set as default shipping address"
               />
               <FormControlLabel
                 control={
@@ -468,20 +468,18 @@ const RegistrationForm: React.FC = () => {
                     margin="normal"
                   />
                 </Box>
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={isDefaultBillingAddress}
-                      onChange={(e) =>
-                        setIsDefaultBillingAddress(e.target.checked)
-                      }
-                      color="primary"
-                    />
-                  }
-                  label="Set as default address"
-                />
               </Box>
             )}
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={isDefaultBillingAddress}
+                  onChange={(e) => setIsDefaultBillingAddress(e.target.checked)}
+                  color="primary"
+                />
+              }
+              label="Set as default billing address"
+            />
 
             {/* Submit Button */}
             <Box mt={4}>
