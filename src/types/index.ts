@@ -23,3 +23,17 @@ export interface ProductProps {
   description: string;
   price: number;
 }
+
+export interface ICategory {
+  id: string;
+  name: {
+    'en-US': string;
+  };
+  slug: {
+    'en-US': string;
+  };
+  parent: {
+    typeId: string;
+    id: string;
+  } | null;
+}
