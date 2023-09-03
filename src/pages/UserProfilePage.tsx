@@ -10,11 +10,14 @@ import {
   CardContent,
   Chip,
   Avatar,
+  Modal,
 } from '@mui/material';
 import { useDispatch } from 'react-redux';
 import { toggleEditMode } from '../store/userProfileSlice';
 import { getUserFromStorage } from '../utils/auth';
 import { User } from '../types';
+import { useState } from 'react';
+import UserProfileEdit from './UserProfileEdit';
 
 export const UserProfilePage: React.FC = () => {
   const dispatch = useDispatch();
@@ -39,6 +42,20 @@ export const UserProfilePage: React.FC = () => {
 
   const isBillingAddress = (addressId: string) => {
     return userData?.billingAddressIds.includes(addressId);
+  };
+
+  const [open, setOpen] = useState(false);
+
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleSave = (newData: User) => {
+    handleClose();
   };
 
   return (
@@ -141,14 +158,33 @@ export const UserProfilePage: React.FC = () => {
         </CardContent>
       </Card>
 
-      <Button
-        variant="contained"
-        color="primary"
-        style={{ marginTop: '20px' }}
-        onClick={() => dispatch(toggleEditMode())}
-      >
+      <Button variant="contained" color="primary" onClick={handleOpen}>
         Edit
       </Button>
+
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="simple-modal-title"
+        aria-describedby="simple-modal-description"
+      >
+        <div
+          style={{
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            position: 'absolute',
+            width: '80%',
+            backgroundColor: 'white',
+            padding: '20px',
+            borderRadius: '10px',
+            maxHeight: '90vh',
+            overflowY: 'auto',
+          }}
+        >
+          <UserProfileEdit />
+        </div>
+      </Modal>
     </Paper>
   );
 };
