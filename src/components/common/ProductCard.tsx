@@ -5,24 +5,23 @@ import {
   CardMedia,
   Typography,
 } from '@mui/material';
-import { ProductProps } from '../../types';
+import { IProduct } from '../../types';
 
-const ProductCard: React.FC<ProductProps> = ({
-  title,
-  image,
-  description,
-  price,
-}) => {
+const ProductCard: React.FC<IProduct> = (product) => {
+  const productName =
+    product.masterData.current.name['en-US'].length < 30
+      ? product.masterData.current.name['en-US']
+      : product.masterData.current.name['en-US'].slice(0, 30).concat('...');
   return (
     <CardActionArea>
       <CardMedia
-        image={image}
-        title={title}
-        style={{ height: 0, paddingTop: '56.25%' }}
+        image={product.masterData.current.masterVariant.images[0].url}
+        title={productName}
+        style={{ paddingTop: '56.25%' }}
       />
       <CardContent>
-        <Typography variant="body2">{title}</Typography>
-        <Typography variant="subtitle1">${price.toFixed(2)}</Typography>
+        <Typography variant="body2">{productName}</Typography>
+        {/* <Typography variant="subtitle1">${price.toFixed(2)}</Typography> */}
       </CardContent>
     </CardActionArea>
   );

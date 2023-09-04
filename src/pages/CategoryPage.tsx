@@ -1,58 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { ICategory } from '../types';
-import {
-  queryCategories,
-  getCategoryByID,
-} from '../commercetools-api/queryCategories';
+import { getCategoryByID } from '../commercetools-api/queryCategories';
 import ProductCard from '../components/common/ProductCard';
 import { Container, Typography, Box, Grid } from '@mui/material';
 import CategorySidebar from '../components/common/CategorySidebar';
 import BreadcrumbNavigation from '../components/common/BreadcrumbNavigation';
-
-//   This data will be fetched from API
-const products = [
-  {
-    title: 'Sample Product 1',
-    image: 'https://via.placeholder.com/150',
-    description: 'This is a sample product.',
-    price: 29.99,
-  },
-  {
-    title: 'Sample Product 1',
-    image: 'https://via.placeholder.com/150',
-    description: 'This is a sample product.',
-    price: 29.99,
-  },
-  {
-    title: 'Sample Product 1',
-    image: 'https://via.placeholder.com/150',
-    description: 'This is a sample product.',
-    price: 29.99,
-  },
-  {
-    title: 'Sample Product 1',
-    image: 'https://via.placeholder.com/150',
-    description: 'This is a sample product.',
-    price: 29.99,
-  },
-  {
-    title: 'Sample Product 1',
-    image: 'https://via.placeholder.com/150',
-    description: 'This is a sample product.',
-    price: 29.99,
-  },
-  {
-    title: 'Sample Product 1',
-    image: 'https://via.placeholder.com/150',
-    description: 'This is a sample product.',
-    price: 29.99,
-  },
-];
+import { queryAllProducts } from '../commercetools-api/queryAllProducts';
+import { IProduct } from '../types';
 
 function CategoryPage() {
   const { id } = useParams<{ id: string }>();
   const [category, setCategory] = useState<ICategory | null>(null);
+  const [productsData, setProductsData] = useState<IProduct[] | null>(null);
 
   useEffect(() => {
     if (id) {
@@ -69,6 +29,9 @@ function CategoryPage() {
             ? { typeId: data.parent.typeId, id: data.parent.id }
             : null,
         });
+      });
+      queryAllProducts().then((data: IProduct[]) => {
+        setProductsData(data);
       });
     }
   }, [id]);
@@ -108,11 +71,26 @@ function CategoryPage() {
                   {category.name['en-US']}
                 </Typography>
                 <Grid container spacing={2} style={{ marginTop: '20px' }}>
-                  {products.map((product, index) => (
-                    <Grid item xs={12} sm={6} md={2} key={index}>
-                      <ProductCard {...product} />
-                    </Grid>
-                  ))}
+                  {productsData && category ? (
+                    productsData.map((product, index) => {
+                      if (
+                        product.masterData.current.categories.length > 0 &&
+                        product.masterData.current.categories.some(
+                          (categoryofProduct) =>
+                            categoryofProduct.id === category.id
+                        )
+                      ) {
+                        return (
+                          <Grid item xs={12} sm={2} md={2} key={index}>
+                            <ProductCard {...product} />
+                          </Grid>
+                        );
+                      }
+                      return null;
+                    })
+                  ) : (
+                    <p>Loading products data...</p>
+                  )}
                 </Grid>
               </>
             ) : (
