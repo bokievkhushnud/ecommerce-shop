@@ -54,7 +54,7 @@ export interface IProduct {
   masterData: {
     current: {
       description: {
-        en: string;
+        'en-US': string;
       };
       masterVariant: {
         id: number;
@@ -65,6 +65,18 @@ export interface IProduct {
           };
           url: string;
         }[];
+        prices: [
+          {
+            value: {
+              centAmount: number;
+            };
+            discounted: {
+              value: {
+                centAmount: number;
+              };
+            };
+          },
+        ];
       };
       categories: [
         {

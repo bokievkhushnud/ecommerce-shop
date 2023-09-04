@@ -31,6 +31,7 @@ function CategoryPage() {
         });
       });
       queryAllProducts().then((data: IProduct[]) => {
+        console.log(data);
         setProductsData(data);
       });
     }
@@ -81,7 +82,7 @@ function CategoryPage() {
                         )
                       ) {
                         return (
-                          <Grid item xs={12} sm={2} md={2} key={index}>
+                          <Grid item xs={12} sm={3} md={3} key={index}>
                             <ProductCard {...product} />
                           </Grid>
                         );
