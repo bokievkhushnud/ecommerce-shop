@@ -17,3 +17,9 @@ export type FormData = {
 export type FormErrors = {
   [K in keyof FormData]?: string;
 };
+
+export type ImagesURL = {
+  url: string;
+  label: string;
+  dimensions: { w: number; h: string };
+};
