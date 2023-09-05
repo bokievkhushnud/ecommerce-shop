@@ -15,6 +15,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from './store';
 import { ToastContainer } from 'react-toastify';
 import RegistrationForm from './pages/RegistrationForm';
+import ProductDetails from './pages/ProductDetails';
 
 const App: React.FC = () => {
   const isLoggedIn = useSelector((state: RootState) => state.auth.isLoggedIn);
@@ -51,6 +52,14 @@ const App: React.FC = () => {
     {
       path: '*',
       element: <NotFoundPage />,
+    },
+    {
+      path: '/details',
+      element: (
+        <MainLayout>
+          <ProductDetails />
+        </MainLayout>
+      ),
     },
   ]);
 
