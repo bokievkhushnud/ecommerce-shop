@@ -8,6 +8,7 @@ import CategorySidebar from '../components/common/CategorySidebar';
 import BreadcrumbNavigation from '../components/common/BreadcrumbNavigation';
 import { queryAllProducts } from '../commercetools-api/queryAllProducts';
 import { IProduct } from '../types';
+import SearchAndFilter from '../components/common/SearchAndFilter';
 
 function CategoryPage() {
   const { id } = useParams<{ id: string }>();
@@ -52,7 +53,7 @@ function CategoryPage() {
             sm={4}
             style={{
               maxWidth: '250px',
-              minHeight: '80vh',
+              minHeight: '60vh',
               borderRadius: '10px',
               border: '1px solid lightgray',
               paddingTop: '0px',
@@ -67,6 +68,7 @@ function CategoryPage() {
           <Grid item xs={12} sm={8}>
             {category ? (
               <>
+                <SearchAndFilter />
                 <BreadcrumbNavigation breadcrumbs={category} />
                 <Typography variant="h4" gutterBottom>
                   {category.name['en-US']}

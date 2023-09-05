@@ -14,9 +14,10 @@ const SearchAndFilter: React.FC = () => {
       <TextField label="Search" variant="outlined" style={{ flex: 1 }} />
       <FormControl variant="outlined" style={{ marginLeft: '20px' }}>
         <InputLabel>Filter</InputLabel>
-        <Select label="Filter">
+        <Select label="Filter" style={{ minWidth: '200px' }}>
           <MenuItem>Price: Low to High</MenuItem>
           <MenuItem>Price: High to Low</MenuItem>
+          <MenuItem>Name</MenuItem>
         </Select>
       </FormControl>
       <Button
