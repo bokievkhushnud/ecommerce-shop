@@ -1,6 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ICategory } from '../../types';
+import {
+  CardContent,
+  CardActionArea,
+  CardMedia,
+  Typography,
+} from '@mui/material';
 
 interface CategoryCardProps {
   category: ICategory;
@@ -30,7 +36,7 @@ const CategoryCard: React.FC<CategoryCardProps> = ({ category }) => {
           backgroundSize: 'cover',
         }}
       >
-        <div className="category-card-title">
+        <div className="category-card-title" style={{ textAlign: 'center' }}>
           {categoryName || 'Loading...'}
         </div>
       </div>
