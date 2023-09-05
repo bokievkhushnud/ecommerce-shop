@@ -1,5 +1,4 @@
 import { getAccessToken } from './accessToken';
-import { IProduct } from '../types';
 
 export async function queryAllProducts(): Promise<any> {
   const loginURL: string = `https://api.${process.env.REACT_APP_REGION}.commercetools.com/${process.env.REACT_APP_PROJECT_KEY}/products?limit=100`;

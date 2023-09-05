@@ -53,11 +53,10 @@ const App: React.FC = () => {
     {
       path: '/categories/:id',
       element: (
-        <>
-          <MainLayout>
-            <CategoryPage />
-          </MainLayout>
-        </>
+        <MainLayout>
+          <CategoryPage />
+        </MainLayout>
+      ),
     },
     {
       path: '/details',
@@ -70,7 +69,7 @@ const App: React.FC = () => {
     {
       path: '*',
       element: <NotFoundPage />,
-    }
+    },
   ]);
 
   return (
