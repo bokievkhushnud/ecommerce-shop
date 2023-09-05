@@ -166,3 +166,41 @@ export async function deleteCustomerAddress(addressId?: string): Promise<any> {
 
   return updateCustomerProfile(actions);
 }
+
+interface CustomerChangePasswordPayload {
+  currentPassword: string;
+  newPassword: string;
+}
+
+export async function changeCustomerPassword(
+  payload: CustomerChangePasswordPayload
+): Promise<any> {
+  // Replace these placeholders with actual values
+  const user = getUserFromStorage();
+  const customerId = user?.id;
+  const version = user?.version;
+
+  const API_ENDPOINT = `https://api.${process.env.REACT_APP_REGION}.commercetools.com/${process.env.REACT_APP_PROJECT_KEY}/customers/password`;
+  const accessToken =
+    localStorage.getItem('accessToken') || (await getAccessToken());
+  const response = await fetch(API_ENDPOINT, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${accessToken}`,
+    },
+    body: JSON.stringify({
+      id: customerId,
+      version,
+      currentPassword: payload.currentPassword,
+      newPassword: payload.newPassword,
+    }),
+  });
+
+  if (!response.ok) {
+    const data = await response.json();
+    throw new Error(data.message || 'Failed to change the password');
+  }
+
+  return response.json();
+}

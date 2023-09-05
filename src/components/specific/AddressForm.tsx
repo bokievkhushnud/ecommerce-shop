@@ -102,7 +102,6 @@ const AddressForm: React.FC<Props> = ({ initialAddress, onClose }) => {
   const handleSubmit = () => {
     if (Object.values(errors).every((error) => !error) && address.country) {
       if (initialAddress) {
-        console.log(address);
         updateCustomerAddress(
           initialAddress.id as string,
           {
@@ -158,8 +157,6 @@ const AddressForm: React.FC<Props> = ({ initialAddress, onClose }) => {
       toast.error('Address form is invalid');
     }
   };
-
-  console.log(address);
 
   return (
     <Box>

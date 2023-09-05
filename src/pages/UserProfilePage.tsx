@@ -29,14 +29,10 @@ import {
 } from '../commercetools-api/updateCustomerInfo';
 import AddressForm, { Address } from '../components/specific/AddressForm'; // Make sure to import the AddressForm
 import ConfirmationModal from '../components/specific/ConfirmModal'; // Make sure to import the ConfirmationModal
+import PasswordChangeModal from '../components/specific/PasswordChangeModal';
 
 export const UserProfilePage: React.FC = () => {
   const userData: User | null = getUserFromStorage();
-
-  const initials = `${userData?.firstName.charAt(0)}${userData?.lastName.charAt(
-    0
-  )}`;
-
   const isDefaultShipping = (addressId: string) => {
     return userData?.defaultShippingAddressId === addressId;
   };
@@ -65,6 +61,7 @@ export const UserProfilePage: React.FC = () => {
   const [currentAddress, setCurrentAddress] = useState<Address | null>(null);
   const [isModalVisible, setModalVisible] = useState(false);
   const [addressToDelete, setAddressToDelete] = useState<string | null>(null);
+  const [isPasswordModalOpen, setPasswordModalOpen] = useState(false);
 
   const [errors, setErrors] = useState({
     firstName: '',
@@ -164,7 +161,6 @@ export const UserProfilePage: React.FC = () => {
       <div
         style={{ display: 'flex', alignItems: 'center', marginBottom: '20px' }}
       >
-        <Avatar style={{ marginRight: '10px' }}>{initials}</Avatar>
         <Typography variant="h4" gutterBottom>
           User Profile
         </Typography>
@@ -173,7 +169,18 @@ export const UserProfilePage: React.FC = () => {
       {/* Personal Information */}
       <Card variant="outlined" style={{ marginBottom: '20px' }}>
         <CardContent>
-          <Typography variant="h6">Personal Information</Typography>
+          <Typography variant="h6">
+            Personal Information
+            {isEditingPersonalInfo ? (
+              <IconButton onClick={handleSavePersonalInfo}>
+                <CheckIcon />
+              </IconButton>
+            ) : (
+              <IconButton onClick={() => setEditingPersonalInfo(true)}>
+                <EditIcon />
+              </IconButton>
+            )}
+          </Typography>
           <List>
             <ListItem>
               {isEditingPersonalInfo ? (
@@ -259,15 +266,16 @@ export const UserProfilePage: React.FC = () => {
             </ListItem>
 
             <ListItem>
-              {isEditingPersonalInfo ? (
-                <IconButton onClick={handleSavePersonalInfo}>
-                  <CheckIcon />
-                </IconButton>
-              ) : (
-                <IconButton onClick={() => setEditingPersonalInfo(true)}>
-                  <EditIcon />
-                </IconButton>
-              )}
+              <Button
+                variant="outlined"
+                onClick={() => setPasswordModalOpen(true)}
+              >
+                Change Password
+              </Button>
+              <PasswordChangeModal
+                open={isPasswordModalOpen}
+                onClose={() => setPasswordModalOpen(false)}
+              />
             </ListItem>
           </List>
         </CardContent>
@@ -360,6 +368,7 @@ export const UserProfilePage: React.FC = () => {
           >
             Add New Address
           </Button>
+
           <Modal open={isModalOpen} onClose={() => setModalOpen(false)}>
             <Box
               style={{
