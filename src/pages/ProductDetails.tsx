@@ -50,12 +50,22 @@ const ProductDetails: React.FC = () => {
   const [productName, setProductName] = useState('');
   const [price, setPrice] = useState();
   const [currency, setCurrency] = useState();
-  const [productsNumber, setProductsNumber] = useState<number | string>(0);
+  const [productsNumber, setProductsNumber] = useState<string>('0');
 
   const images: string[] = [];
 
   function handleChange(event: React.ChangeEvent<HTMLElement>) {
     setProductsNumber((event.target as HTMLInputElement)?.value || '');
+  }
+
+  function plusOneProduct() {
+    setProductsNumber((prevProductsName) => String(+prevProductsName + 1));
+  }
+  function minusOneProduct() {
+    if (productsNumber === '0') {
+      return;
+    }
+    setProductsNumber((prevProductsName) => String(+prevProductsName - 1));
   }
 
   useEffect(() => {
@@ -122,14 +132,18 @@ const ProductDetails: React.FC = () => {
           <div className="swiper"></div>
         </ThemeProvider>
         <div className="number-of-producgts">
-          <Button id="plus">+1</Button>
+          <Button id="minus" onClick={minusOneProduct}>
+            -1
+          </Button>
           <input
             type="text"
             onChange={handleChange}
             className="numberOfProducts"
             value={productsNumber}
           />
-          <Button id="minus">-1</Button>
+          <Button id="plus" onClick={plusOneProduct}>
+            +1
+          </Button>
         </div>
         <button id="btnBuy">Buy</button>
       </Container>
