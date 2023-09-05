@@ -15,6 +15,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from './store';
 import { ToastContainer } from 'react-toastify';
 import RegistrationForm from './pages/RegistrationForm';
+import ProductDetails from './pages/ProductDetails';
 import CategoryPage from './pages/CategoryPage';
 
 const App: React.FC = () => {
@@ -50,10 +51,6 @@ const App: React.FC = () => {
       ),
     },
     {
-      path: '*',
-      element: <NotFoundPage />,
-    },
-    {
       path: '/categories/:id',
       element: (
         <>
@@ -61,8 +58,19 @@ const App: React.FC = () => {
             <CategoryPage />
           </MainLayout>
         </>
+    },
+    {
+      path: '/details',
+      element: (
+        <MainLayout>
+          <ProductDetails />
+        </MainLayout>
       ),
     },
+    {
+      path: '*',
+      element: <NotFoundPage />,
+    }
   ]);
 
   return (
