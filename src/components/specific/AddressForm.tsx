@@ -7,30 +7,53 @@ import {
   InputLabel,
   Typography,
   Box,
+  Checkbox,
+  FormControlLabel,
+  Button,
 } from '@mui/material';
 import { SelectChangeEvent } from '@mui/material/Select';
+import {
+  validateCity,
+  validatePostalCodeForCountry,
+  validateStreet,
+} from '../../utils/validators';
+import { toast } from 'react-toastify';
+import {
+  addCustomerAddress,
+  updateCustomerAddress,
+} from '../../commercetools-api/updateCustomerInfo';
 
-interface Address {
+export interface Address {
+  id?: string;
   country: string;
   city: string;
-  street: string;
+  streetName: string;
   postalCode: string;
+  isBilling: boolean;
+  isShipping: boolean;
+  isDefaultBilling: boolean;
+  isDefaultShipping: boolean;
 }
 
 interface Props {
   initialAddress?: Address;
-  onSubmit: (address: Address) => void;
+  onClose: () => void; // Function to close the modal
 }
 
-const AddressForm: React.FC<Props> = ({ initialAddress, onSubmit }) => {
+const AddressForm: React.FC<Props> = ({ initialAddress, onClose }) => {
   const [address, setAddress] = useState<Address>(
     initialAddress || {
       country: '',
       city: '',
-      street: '',
+      streetName: '',
       postalCode: '',
+      isBilling: false,
+      isShipping: false,
+      isDefaultBilling: false,
+      isDefaultShipping: false,
     }
   );
+
   const [errors, setErrors] = useState<Partial<Address>>({});
 
   useEffect(() => {
@@ -39,30 +62,6 @@ const AddressForm: React.FC<Props> = ({ initialAddress, onSubmit }) => {
     }
   }, [initialAddress]);
 
-  const validateCity = (city: string): string => {
-    return /^[a-zA-Z\s]+$/.test(city) ? '' : 'Invalid city name';
-  };
-
-  const validateStreet = (street: string): string => {
-    return street.trim() === '' ? 'Street cannot be empty' : '';
-  };
-
-  const validatePostalCodeForCountry = (
-    postalCode: string,
-    country: string
-  ): string => {
-    if (country === 'US' && !/^\d{5}$/.test(postalCode)) {
-      return 'Invalid US postal code format (e.g. 12345)';
-    }
-    if (
-      country === 'CA' &&
-      !/^[A-Za-z]\d[A-Za-z][ -]?\d[A-Za-z]\d$/.test(postalCode)
-    ) {
-      return 'Invalid Canada postal code format (e.g. A1B 2C3)';
-    }
-    return '';
-  };
-
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
 
@@ -70,7 +69,7 @@ const AddressForm: React.FC<Props> = ({ initialAddress, onSubmit }) => {
 
     let error = '';
     switch (name) {
-      case 'street':
+      case 'streetName':
         error = validateStreet(value);
         break;
       case 'city':
@@ -101,12 +100,66 @@ const AddressForm: React.FC<Props> = ({ initialAddress, onSubmit }) => {
   };
 
   const handleSubmit = () => {
-    if (Object.values(errors).every((error) => !error)) {
-      onSubmit(address);
+    if (Object.values(errors).every((error) => !error) && address.country) {
+      if (initialAddress) {
+        console.log(address);
+        updateCustomerAddress(
+          initialAddress.id as string,
+          {
+            country: address.country,
+            city: address.city,
+            streetName: address.streetName,
+            postalCode: address.postalCode,
+          },
+          address.isBilling,
+          address.isDefaultBilling,
+          address.isShipping,
+          address.isDefaultShipping
+        )
+          .then((response) => {
+            localStorage.setItem(
+              'user',
+              JSON.stringify({ customer: response })
+            );
+            toast.success('Address saved');
+            onClose();
+          })
+          .catch((error) => {
+            toast.error('Error saving address');
+            console.error(error);
+          });
+      } else {
+        addCustomerAddress(
+          {
+            country: address.country,
+            city: address.city,
+            streetName: address.streetName,
+            postalCode: address.postalCode,
+          },
+          address.isBilling,
+          address.isDefaultBilling,
+          address.isShipping,
+          address.isDefaultShipping
+        )
+          .then((response) => {
+            localStorage.setItem(
+              'user',
+              JSON.stringify({ customer: response })
+            );
+            toast.success('Address saved');
+            onClose();
+          })
+          .catch((error) => {
+            toast.error('Error saving address');
+            console.error(error);
+          });
+      }
     } else {
-      console.error('Address form is invalid');
+      toast.error('Address form is invalid');
     }
   };
+
+  console.log(address);
 
   return (
     <Box>
@@ -129,7 +182,6 @@ const AddressForm: React.FC<Props> = ({ initialAddress, onSubmit }) => {
           <Typography color="error">{errors.country}</Typography>
         )}
       </FormControl>
-
       <TextField
         name="city"
         label="City"
@@ -141,19 +193,17 @@ const AddressForm: React.FC<Props> = ({ initialAddress, onSubmit }) => {
         fullWidth
         margin="normal"
       />
-
       <TextField
-        name="street"
+        name="streetName"
         label="Street"
-        value={address.street}
+        value={address.streetName}
         onChange={handleInputChange}
-        error={!!errors.street}
-        helperText={errors.street}
+        error={!!errors.streetName}
+        helperText={errors.streetName}
         variant="outlined"
         fullWidth
         margin="normal"
       />
-
       <TextField
         name="postalCode"
         label="Postal Code"
@@ -165,6 +215,62 @@ const AddressForm: React.FC<Props> = ({ initialAddress, onSubmit }) => {
         fullWidth
         margin="normal"
       />
+      <FormControlLabel
+        control={
+          <Checkbox
+            checked={address.isBilling}
+            onChange={(e) =>
+              setAddress({ ...address, isBilling: e.target.checked })
+            }
+            name="isBilling"
+          />
+        }
+        label="Billing Address"
+      />
+      <FormControlLabel
+        control={
+          <Checkbox
+            checked={address.isShipping}
+            onChange={(e) =>
+              setAddress({ ...address, isShipping: e.target.checked })
+            }
+            name="isShipping"
+          />
+        }
+        label="Shipping Address"
+      />
+      <FormControlLabel
+        control={
+          <Checkbox
+            checked={address.isDefaultBilling}
+            onChange={(e) =>
+              setAddress({ ...address, isDefaultBilling: e.target.checked })
+            }
+            name="isDefaultBilling"
+          />
+        }
+        label="Default Billing Address"
+      />
+      <FormControlLabel
+        control={
+          <Checkbox
+            checked={address.isDefaultShipping}
+            onChange={(e) =>
+              setAddress({ ...address, isDefaultShipping: e.target.checked })
+            }
+            name="isDefaultShipping"
+          />
+        }
+        label="Default Shipping Address"
+      />
+      <Box mt={2}>
+        {' '}
+        {/* Add a top margin for visual spacing */}
+        <Button variant="contained" color="primary" onClick={handleSubmit}>
+          {initialAddress ? 'Update' : 'Add'}{' '}
+          {/* Set button text based on initialAddress */}
+        </Button>
+      </Box>
     </Box>
   );
 };

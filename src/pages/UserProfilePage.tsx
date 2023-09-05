@@ -12,16 +12,23 @@ import {
   Avatar,
   TextField,
   IconButton,
+  Modal,
+  Box,
 } from '@mui/material';
 import { getUserFromStorage } from '../utils/auth';
 import { User } from '../types';
 import { useState } from 'react';
 import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 import CheckIcon from '@mui/icons-material/Check';
 import { validateDOB, validateEmail, validateName } from '../utils/validators';
 import { toast } from 'react-toastify';
-import { updateCustomerProfile } from '../commercetools-api/updateCustomerInfo';
-import AddressForm from '../components/specific/AddressForm';
+import {
+  updateCustomerProfile,
+  deleteCustomerAddress,
+} from '../commercetools-api/updateCustomerInfo';
+import AddressForm, { Address } from '../components/specific/AddressForm'; // Make sure to import the AddressForm
+import ConfirmationModal from '../components/specific/ConfirmModal'; // Make sure to import the ConfirmationModal
 
 export const UserProfilePage: React.FC = () => {
   const userData: User | null = getUserFromStorage();
@@ -54,6 +61,11 @@ export const UserProfilePage: React.FC = () => {
   const [email, setEmail] = useState(userData?.email);
   const [dateOfBirth, setDateOfBirth] = useState(userData?.dateOfBirth);
 
+  const [isModalOpen, setModalOpen] = useState(false);
+  const [currentAddress, setCurrentAddress] = useState<Address | null>(null);
+  const [isModalVisible, setModalVisible] = useState(false);
+  const [addressToDelete, setAddressToDelete] = useState<string | null>(null);
+
   const [errors, setErrors] = useState({
     firstName: '',
     lastName: '',
@@ -83,9 +95,6 @@ export const UserProfilePage: React.FC = () => {
 
   const handleSavePersonalInfo = async () => {
     if (Object.values(errors).every((error) => !error)) {
-      const customerId = userData?.id;
-      const version = userData?.version;
-
       const actions = [
         { action: 'setFirstName', firstName: firstName },
         { action: 'setLastName', lastName: lastName },
@@ -93,7 +102,7 @@ export const UserProfilePage: React.FC = () => {
         { action: 'setDateOfBirth', dateOfBirth: dateOfBirth },
       ];
 
-      updateCustomerProfile(customerId, version, actions)
+      updateCustomerProfile(actions)
         .then((updatedCustomer) => {
           // Update the user in the local storage
           localStorage.setItem(
@@ -111,18 +120,43 @@ export const UserProfilePage: React.FC = () => {
     }
   };
 
-  const [open, setOpen] = useState(false);
-
-  const handleOpen = () => {
-    setOpen(true);
+  const handleEditAddress = (address: Address) => {
+    setCurrentAddress(address);
+    setModalOpen(true);
   };
 
-  const handleClose = () => {
-    setOpen(false);
+  const handleAddNewAddress = () => {
+    setCurrentAddress(null);
+    setModalOpen(true);
   };
 
-  const handleSave = (newData: User) => {
-    handleClose();
+  const handleDeleteAddress = (addressId: string) => {
+    // Store the addressId and open the modal
+    setAddressToDelete(addressId);
+    setModalVisible(true);
+  };
+
+  const handleConfirmDelete = () => {
+    deleteCustomerAddress(addressToDelete || '')
+      .then((updatedCustomer) => {
+        // Update the user in the local storage
+        localStorage.setItem(
+          'user',
+          JSON.stringify({ customer: updatedCustomer })
+        );
+        toast.success('Address deleted successfully!');
+        setModalVisible(false);
+        setAddressToDelete(null);
+      })
+      .catch((error) => {
+        toast.error(error.message || 'Something went wrong');
+      });
+  };
+
+  const handleCancelDelete = () => {
+    // Just close the modal and clear the addressToDelete state
+    setModalVisible(false);
+    setAddressToDelete(null);
   };
 
   return (
@@ -239,7 +273,6 @@ export const UserProfilePage: React.FC = () => {
         </CardContent>
       </Card>
 
-      {/* Shipping Addresses */}
       {/* Addresses */}
       <Card variant="outlined" style={{ marginBottom: '20px' }}>
         <CardContent>
@@ -295,7 +328,13 @@ export const UserProfilePage: React.FC = () => {
 
                   <IconButton
                     onClick={() => {
-                      /* handleEditAddress function here */
+                      handleEditAddress({
+                        ...address,
+                        isBilling: isBillingAddress(address.id),
+                        isShipping: isShippingAddress(address.id),
+                        isDefaultBilling: isDefaultBilling(address.id),
+                        isDefaultShipping: isDefaultShipping(address.id),
+                      });
                     }}
                   >
                     <EditIcon />
@@ -303,10 +342,10 @@ export const UserProfilePage: React.FC = () => {
 
                   <IconButton
                     onClick={() => {
-                      /* handleDeleteAddress function here */
+                      handleDeleteAddress(address.id);
                     }}
                   >
-                    {/* You can use a delete icon here */}
+                    <DeleteIcon />
                   </IconButton>
                 </ListItem>
               </List>
@@ -314,13 +353,39 @@ export const UserProfilePage: React.FC = () => {
             </div>
           ))}
           <Button
-            onClick={handleOpen}
             variant="contained"
             color="primary"
             style={{ marginTop: '15px' }}
+            onClick={handleAddNewAddress}
           >
             Add New Address
           </Button>
+          <Modal open={isModalOpen} onClose={() => setModalOpen(false)}>
+            <Box
+              style={{
+                backgroundColor: 'white',
+                position: 'absolute',
+                top: '50%',
+                left: '50%',
+                transform: 'translate(-50%, -50%)',
+                maxWidth: '80%',
+                borderRadius: '8px',
+              }}
+              p={2}
+            >
+              <AddressForm
+                initialAddress={currentAddress || undefined}
+                onClose={() => {
+                  setModalOpen(false);
+                }}
+              />
+            </Box>
+          </Modal>
+          <ConfirmationModal
+            isVisible={isModalVisible}
+            onConfirm={handleConfirmDelete}
+            onCancel={handleCancelDelete}
+          />
         </CardContent>
       </Card>
     </Paper>
