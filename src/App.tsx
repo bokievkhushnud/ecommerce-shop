@@ -61,6 +61,14 @@ const App: React.FC = () => {
       ),
     },
     {
+      path: '/categories',
+      element: (
+        <MainLayout>
+          <CategoryPage />
+        </MainLayout>
+      ),
+    },
+    {
       path: '/categories/:id',
       element: (
         <MainLayout>

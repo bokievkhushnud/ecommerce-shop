@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useLocation } from 'react-router-dom';
 import {
   List,
-  ListItem,
   ListItemText,
   ListItemButton,
   ListItemIcon,
@@ -12,8 +11,8 @@ import {
   Divider,
   Paper,
 } from '@mui/material';
-import { ICategory } from '../../types';
 import { ExpandMore, ChevronRight } from '@mui/icons-material';
+import { ICategory } from '../../types';
 import { queryCategories } from '../../commercetools-api/queryCategories';
 
 interface CategorySidebarProps {
@@ -25,12 +24,16 @@ const CategorySidebar: React.FC<CategorySidebarProps> = ({
 }) => {
   const [categories, setCategories] = useState<ICategory[]>([]);
   const [open, setOpen] = useState<string | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<string | 'all'>(
+    onSelectCategory.id || 'all'
+  );
 
   useEffect(() => {
     queryCategories().then((data: ICategory[]) => {
       setCategories(data);
     });
   }, []);
+  const location = useLocation();
 
   const handleClick = (id: string) => {
     if (open === id) {
@@ -100,6 +103,15 @@ const CategorySidebar: React.FC<CategorySidebarProps> = ({
         aria-labelledby="nested-list-subheader"
         sx={{ mt: 2 }}
       >
+        <ListItemButton
+          component={RouterLink}
+          to="/categories"
+          selected={location.pathname === '/categories'}
+          sx={{ borderRadius: '5px', mb: 1, px: 1 }}
+        >
+          <ListItemText primary="All Categories" />
+        </ListItemButton>
+        <Divider />
         {categories
           .filter((cat) => !cat.parent)
           .map((category) => renderCategory(category))}

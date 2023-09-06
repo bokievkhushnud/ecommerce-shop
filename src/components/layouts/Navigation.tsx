@@ -22,6 +22,7 @@ import { getUserFromStorage } from '../../utils/auth';
 const pages = [
   { path: '/', name: 'Home' },
   { path: '/cart', name: 'Cart' },
+  { path: '/categories', name: 'Categories' },
 ];
 
 const ResponsiveAppBar: React.FC = () => {
