@@ -15,8 +15,10 @@ import { useSelector } from 'react-redux';
 import { RootState } from './store';
 import { ToastContainer } from 'react-toastify';
 import RegistrationForm from './pages/RegistrationForm';
+import { UserProfilePage } from './pages/UserProfilePage';
 import ProductDetails from './pages/ProductDetails';
 import CategoryPage from './pages/CategoryPage';
+import ProductDetailsPage from './pages/ProductDetailsPage';
 
 const App: React.FC = () => {
   const isLoggedIn = useSelector((state: RootState) => state.auth.isLoggedIn);
@@ -51,6 +53,24 @@ const App: React.FC = () => {
       ),
     },
     {
+      path: '/profile',
+      element: isLoggedIn ? (
+        <MainLayout>
+          <UserProfilePage />
+        </MainLayout>
+      ) : (
+        <Navigate to="/login" replace />
+      ),
+    },
+    {
+      path: '/categories',
+      element: (
+        <MainLayout>
+          <CategoryPage />
+        </MainLayout>
+      ),
+    },
+    {
       path: '/categories/:id',
       element: (
         <MainLayout>
@@ -59,10 +79,10 @@ const App: React.FC = () => {
       ),
     },
     {
-      path: '/details',
+      path: '/products/:productId',
       element: (
         <MainLayout>
-          <ProductDetails />
+          <ProductDetailsPage />
         </MainLayout>
       ),
     },

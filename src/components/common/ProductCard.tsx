@@ -4,69 +4,73 @@ import {
   CardActionArea,
   CardMedia,
   Typography,
+  Box,
 } from '@mui/material';
 import { IProduct } from '../../types';
+import { Link } from 'react-router-dom';
 
 const ProductCard: React.FC<IProduct> = (product) => {
-  const productName =
-    product.masterData.current.name['en-US'].length < 20
-      ? product.masterData.current.name['en-US']
-      : product.masterData.current.name['en-US'].slice(0, 20).concat('...');
-  const productDescription =
-    product.masterData.current.description['en-US'].length < 20
-      ? product.masterData.current.description['en-US']
-      : product.masterData.current.description['en-US']
-          .slice(0, 20)
-          .concat('...');
+  console.log(product);
+  const { name, description, masterVariant } = product.masterData.current;
+
+  const displayPrice = (centAmount: number) =>
+    `$${(centAmount * 0.01).toFixed(2)}`;
 
   return (
-    <CardActionArea>
-      <CardMedia
-        image={product.masterData.current.masterVariant.images[0].url}
-        title={productName}
-        style={{ paddingTop: '100%' }}
-      />
-      <CardContent style={{ padding: '10px 5px 0' }}>
-        <Typography variant="body1">{productName}</Typography>
-        <Typography variant="body2">{productDescription}</Typography>
-        {product.masterData.current.masterVariant.prices.length ? (
-          <div>
-            {product.masterData.current.masterVariant.prices[0].discounted &&
-            product.masterData.current.masterVariant.prices[0].discounted
-              .value &&
-            product.masterData.current.masterVariant.prices[0].discounted.value
-              .centAmount ? (
-              <>
-                <Typography
-                  variant="body2"
-                  style={{ textDecoration: 'line-through', color: 'gray' }}
-                >
-                  {`$${(
-                    product.masterData.current.masterVariant.prices[0].value
-                      .centAmount * 0.01
-                  ).toFixed(2)}`}
+    <Link to={`/products/${product.id}`} style={{ textDecoration: 'none' }}>
+      <CardActionArea>
+        <CardMedia
+          image={masterVariant.images[0].url}
+          title={name['en-US']}
+          style={{ paddingTop: '100%' }}
+        />
+        <CardContent>
+          <Typography variant="body1" noWrap style={{ width: '90%' }}>
+            {name['en-US']}
+          </Typography>
+          <Typography
+            variant="body2"
+            noWrap
+            style={{ width: '90%', color: 'gray' }}
+          >
+            {description['en-US']}
+          </Typography>
+          {masterVariant.prices.length ? (
+            <Box mt={1}>
+              {masterVariant.prices[0].discounted &&
+              masterVariant.prices[0].discounted.value ? (
+                <>
+                  <Typography
+                    variant="body2"
+                    style={{
+                      textDecoration: 'line-through',
+                      display: 'inline-block',
+                      marginRight: '8px',
+                    }}
+                  >
+                    {displayPrice(masterVariant.prices[0].value.centAmount)}
+                  </Typography>
+                  <Typography
+                    variant="body2"
+                    style={{ color: 'red', display: 'inline-block' }}
+                  >
+                    {displayPrice(
+                      masterVariant.prices[0].discounted.value.centAmount
+                    )}
+                  </Typography>
+                </>
+              ) : (
+                <Typography variant="body2">
+                  {displayPrice(masterVariant.prices[0].value.centAmount)}
                 </Typography>
-                <Typography variant="body2" style={{ color: 'red' }}>
-                  {`$${(
-                    product.masterData.current.masterVariant.prices[0]
-                      .discounted.value.centAmount * 0.01
-                  ).toFixed(2)}`}
-                </Typography>
-              </>
-            ) : (
-              <Typography variant="body2">
-                {`$${(
-                  product.masterData.current.masterVariant.prices[0].value
-                    .centAmount * 0.01
-                ).toFixed(2)}`}
-              </Typography>
-            )}
-          </div>
-        ) : (
-          <Typography variant="body2">$0.00</Typography>
-        )}
-      </CardContent>
-    </CardActionArea>
+              )}
+            </Box>
+          ) : (
+            <Typography variant="body2">$0.00</Typography>
+          )}
+        </CardContent>
+      </CardActionArea>
+    </Link>
   );
 };
 

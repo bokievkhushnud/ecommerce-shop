@@ -19,6 +19,7 @@ export const transformToApiFormat = (
         country: formData.country,
       },
     ],
+    shippingAddresses: [0],
   };
 
   if (isDefaultShippingAddress) {
@@ -28,10 +29,15 @@ export const transformToApiFormat = (
     };
   }
 
-  if (isDefaultBillingAddress) {
+  if (isAlsoBillingAddress && isDefaultBillingAddress) {
     userData = {
       ...userData,
       defaultBillingAddress: 0,
+    };
+  } else if (!isAlsoBillingAddress && isDefaultBillingAddress) {
+    userData = {
+      ...userData,
+      defaultBillingAddress: 1,
     };
   }
 
@@ -39,18 +45,12 @@ export const transformToApiFormat = (
     userData = {
       ...userData,
       billingAddresses: [0],
-      shippingAddresses: [0],
     };
   } else {
     userData = {
       ...userData,
       addresses: [
-        {
-          streetName: formData.street,
-          city: formData.city,
-          postalCode: formData.postalCode,
-          country: formData.country,
-        },
+        userData.addresses[0],
         {
           streetName: formData.billingStreet,
           city: formData.billingCity,
