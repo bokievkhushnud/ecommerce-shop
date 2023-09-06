@@ -58,7 +58,9 @@ const App: React.FC = () => {
         </MainLayout>
       ) : (
         <Navigate to="/login" replace />
-        },
+      ),
+    },
+    {
       path: '/categories/:id',
       element: (
         <MainLayout>
