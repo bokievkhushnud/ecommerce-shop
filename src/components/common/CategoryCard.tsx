@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import React from 'react';
+import { Link as RouterLink } from 'react-router-dom';
 import { ICategory } from '../../types';
 import {
-  CardContent,
+  Card,
   CardActionArea,
   CardMedia,
   Typography,
+  CardContent,
 } from '@mui/material';
 
 interface CategoryCardProps {
@@ -13,34 +14,40 @@ interface CategoryCardProps {
 }
 
 const CategoryCard: React.FC<CategoryCardProps> = ({ category }) => {
-  console.log(category);
-  const [categoryId, setCategoryId] = useState<string | null>(null);
-  const [categoryName, setCategoryName] = useState<string | null>(null);
-  const [categorySlug, setCategorySlug] = useState<string | null>(null);
-
-  useEffect(() => {
-    setCategoryId(category.id);
-    setCategoryName(category.name['en-US']);
-    setCategorySlug(category.slug['en-US']);
-  }, [category.id, category.name['en-US'], category.slug['en-US']]);
+  const imageUrl = `./${category.slug['en-US']}.jpg`;
 
   return (
-    <Link to={`/categories/${categoryId}`} className="category-card-link">
-      <div
-        className="category-card"
-        id={categorySlug || undefined}
-        style={{
-          backgroundImage: `url(./${category.slug['en-US']}.jpg)`,
-          width: '250px',
-          height: '350px',
-          backgroundSize: 'cover',
-        }}
+    <Card
+      style={{
+        maxWidth: 300,
+        margin: 'auto',
+        borderRadius: 12,
+        boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+        transition: 'transform .2s',
+      }}
+    >
+      <CardActionArea
+        component={RouterLink}
+        to={`/categories/${category.id}`}
+        style={{ textDecoration: 'none' }}
       >
-        <div className="category-card-title" style={{ textAlign: 'center' }}>
-          {categoryName || 'Loading...'}
-        </div>
-      </div>
-    </Link>
+        <CardMedia
+          style={{
+            height: 260,
+            backgroundPosition: 'center',
+            borderTopLeftRadius: 12,
+            borderTopRightRadius: 12,
+          }}
+          image={imageUrl}
+          title={category.name['en-US']}
+        />
+        <CardContent>
+          <Typography variant="h6" component="div" align="center">
+            {category.name['en-US']}
+          </Typography>
+        </CardContent>
+      </CardActionArea>
+    </Card>
   );
 };
 
