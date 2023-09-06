@@ -6,27 +6,38 @@ import {
   InputLabel,
   Select,
   MenuItem,
+  SelectChangeEvent,
 } from '@mui/material';
 
-const SearchAndFilter: React.FC = () => {
+interface SearchAndFilterProps {
+  selectedFilter: string;
+  onFilterChange: (event: SelectChangeEvent<string>) => void;
+}
+
+const SearchAndFilter: React.FC<SearchAndFilterProps> = ({
+  selectedFilter,
+  onFilterChange,
+}) => {
   return (
     <div style={{ display: 'flex', marginBottom: '20px' }}>
       <TextField label="Search" variant="outlined" style={{ flex: 1 }} />
-      <FormControl variant="outlined" style={{ marginLeft: '20px' }}>
+      <FormControl
+        variant="outlined"
+        style={{ marginLeft: '20px', height: '1em' }}
+      >
         <InputLabel>Filter</InputLabel>
-        <Select label="Filter" style={{ minWidth: '200px' }}>
-          <MenuItem>Price: Low to High</MenuItem>
-          <MenuItem>Price: High to Low</MenuItem>
-          <MenuItem>Name</MenuItem>
+        <Select
+          label="Filter"
+          style={{ minWidth: '200px' }}
+          value={selectedFilter}
+          onChange={onFilterChange}
+        >
+          <MenuItem value="">None</MenuItem>
+          <MenuItem value="Price: Low to High">Price: Low to High</MenuItem>
+          <MenuItem value="Price: High to Low">Price: High to Low</MenuItem>
+          <MenuItem value="Name">Name</MenuItem>
         </Select>
       </FormControl>
-      <Button
-        variant="contained"
-        color="primary"
-        style={{ marginLeft: '20px' }}
-      >
-        Apply
-      </Button>
     </div>
   );
 };
