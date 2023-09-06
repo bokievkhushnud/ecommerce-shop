@@ -1,8 +1,7 @@
 import React from 'react';
-import { Container, Typography, Box, Grid } from '@mui/material';
+import { Container, Typography, Box, Grid, Paper } from '@mui/material';
 import SearchAndFilter from '../components/common/SearchAndFilter';
 import DiscountBanner from '../components/common/DiscountBanner';
-import ProductCard from '../components/common/ProductCard';
 import { queryCategories } from '../commercetools-api/queryCategories';
 import CategoryCard from '../components/common/CategoryCard';
 import { ICategory } from '../types';
@@ -66,7 +65,7 @@ const MainPage: React.FC = () => {
         )}
       </Grid>
 
-      <DiscountBanner />
+      <br />
     </Container>
   );
 };
