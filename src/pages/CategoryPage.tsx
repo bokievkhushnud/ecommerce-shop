@@ -25,7 +25,7 @@ function CategoryPage() {
   const [selectedFilter, setSelectedFilter] = useState<string>('Default');
 
   const defaultCategory: ICategory = {
-    id: '',
+    id: 'istdef',
     name: { 'en-US': 'All Categories' },
     slug: { 'en-US': '' },
     parent: null,
@@ -46,8 +46,10 @@ function CategoryPage() {
     setSelectedFilter(selectedValue);
 
     let sortOrder = '';
-    if (selectedValue === 'Name') {
+    if (selectedValue === 'Name (A-Z)') {
       sortOrder = 'name.en-US.asc';
+    } else if (selectedValue === 'Name (Z-A)') {
+      sortOrder = 'name.en-US.desc';
     } else if (selectedValue === 'Price: Low to High') {
       sortOrder = 'price.asc';
     } else if (selectedValue === 'Price: High to Low') {
@@ -55,7 +57,6 @@ function CategoryPage() {
     } else {
       sortOrder = ''; // for default
     }
-
     queryAllProducts(sortOrder).then((data) => setProductsData(data));
   };
 
@@ -70,12 +71,13 @@ function CategoryPage() {
           </Grid>
 
           <Grid item xs={12} sm={8}>
+            <SearchAndFilter
+              selectedFilter={selectedFilter}
+              onFilterChange={handleFilterChange}
+            />
+
             {category ? (
               <>
-                <SearchAndFilter
-                  selectedFilter={selectedFilter}
-                  onFilterChange={handleFilterChange}
-                />
                 <BreadcrumbNavigation breadcrumbs={category} />
                 <Typography variant="h4" gutterBottom>
                   {category.name['en-US']}
@@ -92,7 +94,7 @@ function CategoryPage() {
                 productsData.map((product, index) => {
                   if (
                     !id ||
-                    product.masterData.current.categories.some(
+                    product.categories.some(
                       (categoryofProduct) => categoryofProduct.id === id
                     )
                   ) {

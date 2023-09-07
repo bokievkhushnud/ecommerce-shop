@@ -1,31 +1,102 @@
 import { getAccessToken } from './accessToken';
 
-export async function queryAllProducts(sortBy: string = ''): Promise<any> {
+export async function queryAllProducts(sortOrder: string): Promise<any> {
   let sortParam = '';
 
-  if (sortBy) {
-    switch (sortBy) {
-      case 'Name':
-        sortParam = `&sort=masterData.current.name.en-US asc`;
+  if (sortOrder) {
+    switch (sortOrder) {
+      case 'name.en-US.asc':
+        sortParam = `&sort=name.en-US asc`;
         break;
-      case 'Price: Low to High':
-        // Use a placeholder for now; further adjustment might be required based on the API's documentation
-        sortParam = `&sort=variants.price.centAmount desc`;
+      case 'name.en-US.desc':
+        sortParam = `&sort=name.en-US desc`;
         break;
-      case 'Price: High to Low':
-        // Use a placeholder for now; further adjustment might be required based on the API's documentation
-        sortParam = `&sort=masterData.current.masterVariant.price desc`;
+      case 'price.asc':
+        sortParam = `&sort=price asc`; // Updated based on the error message
+        break;
+      case 'price.desc':
+        sortParam = `&sort=price desc`; // Updated based on the error message
         break;
       default:
         break;
     }
   }
 
-  const loginURL: string = `https://api.${process.env.REACT_APP_REGION}.commercetools.com/${process.env.REACT_APP_PROJECT_KEY}/products?limit=100${sortParam}`;
+  const url: string = `https://api.${process.env.REACT_APP_REGION}.commercetools.com/${process.env.REACT_APP_PROJECT_KEY}/product-projections/search?${sortParam}`;
   const bearerToken: string =
     localStorage.getItem('accessToken') || (await getAccessToken());
 
-  const response = await fetch(loginURL, {
+  const response = await fetch(url, {
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${bearerToken}`,
+    },
+  });
+
+  if (response.ok) {
+    const data = await response.json();
+    return data.results;
+  } else {
+    throw new Error('HTTP Error: ' + response.status);
+  }
+}
+
+export async function fetchFilteredProducts(
+  priceRange?: [number, number],
+  flavors?: {
+    spicy?: boolean;
+    sweet?: boolean;
+  },
+  dietary?: {
+    organic?: boolean;
+    vegan?: boolean;
+    vegetarian?: boolean;
+  },
+  portionSizes?: {
+    small?: boolean;
+    medium?: boolean;
+    large?: boolean;
+  }
+): Promise<any> {
+  let filterParams = '';
+
+  // Constructing filters
+  if (priceRange) {
+    filterParams += `&filter=masterVariant.prices.centAmount:range(${
+      priceRange[0] * 100
+    },${priceRange[1] * 100})`;
+  }
+
+  if (flavors) {
+    if (flavors.spicy)
+      filterParams += '&filter=attributes.flavor:exact("spicy")';
+    if (flavors.sweet)
+      filterParams += '&filter=attributes.flavor:exact("sweet")';
+  }
+
+  if (dietary) {
+    if (dietary.organic)
+      filterParams += '&filter=attributes.dietary:exact("organic")';
+    if (dietary.vegan)
+      filterParams += '&filter=attributes.dietary:exact("vegan")';
+    if (dietary.vegetarian)
+      filterParams += '&filter=attributes.dietary:exact("vegetarian")';
+  }
+
+  if (portionSizes) {
+    if (portionSizes.small)
+      filterParams += '&filter=attributes.portionSize:exact("small")';
+    if (portionSizes.medium)
+      filterParams += '&filter=attributes.portionSize:exact("medium")';
+    if (portionSizes.large)
+      filterParams += '&filter=attributes.portionSize:exact("large")';
+  }
+
+  const url: string = `https://api.${process.env.REACT_APP_REGION}.commercetools.com/${process.env.REACT_APP_PROJECT_KEY}/product-projections?limit=100${filterParams}`;
+  const bearerToken: string =
+    localStorage.getItem('accessToken') || (await getAccessToken());
+
+  const response = await fetch(url, {
     method: 'GET',
     headers: {
       Authorization: `Bearer ${bearerToken}`,
