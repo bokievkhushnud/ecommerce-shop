@@ -1,7 +1,27 @@
 import { getAccessToken } from './accessToken';
 
-export async function queryAllProducts(): Promise<any> {
-  const loginURL: string = `https://api.${process.env.REACT_APP_REGION}.commercetools.com/${process.env.REACT_APP_PROJECT_KEY}/products?limit=100`;
+export async function queryAllProducts(sortBy: string = ''): Promise<any> {
+  let sortParam = '';
+
+  if (sortBy) {
+    switch (sortBy) {
+      case 'Name':
+        sortParam = `&sort=masterData.current.name.en-US asc`;
+        break;
+      case 'Price: Low to High':
+        // Use a placeholder for now; further adjustment might be required based on the API's documentation
+        sortParam = `&sort=variants.price.centAmount desc`;
+        break;
+      case 'Price: High to Low':
+        // Use a placeholder for now; further adjustment might be required based on the API's documentation
+        sortParam = `&sort=masterData.current.masterVariant.price desc`;
+        break;
+      default:
+        break;
+    }
+  }
+
+  const loginURL: string = `https://api.${process.env.REACT_APP_REGION}.commercetools.com/${process.env.REACT_APP_PROJECT_KEY}/products?limit=100${sortParam}`;
   const bearerToken: string =
     localStorage.getItem('accessToken') || (await getAccessToken());
 
