@@ -37,19 +37,17 @@ const MainPage: React.FC = () => {
         flexDirection="column"
         alignItems="center"
         justifyContent="center"
-        marginY={4}
+        marginTop="10px"
       >
-        <Typography variant="h3" gutterBottom>
+        <Typography variant="h4" gutterBottom>
           Welcome to Grandma's Shop
         </Typography>
-        <Typography variant="h5" paragraph>
+        <Typography variant="h6" paragraph>
           We'll remind you of your grandma's cooking.
         </Typography>
       </Box>
 
-      <SearchAndFilter />
-
-      <Grid container spacing={3} style={{ marginTop: '20px' }}>
+      <Grid container spacing={3} style={{ marginTop: '0' }}>
         {categories ? (
           categories.map((category, index) => {
             if (category.parent === null) {
