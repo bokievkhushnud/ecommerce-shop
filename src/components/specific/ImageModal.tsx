@@ -58,6 +58,7 @@ const ImageModal: React.FC<ImageModalProps> = ({ images }) => {
           height="80vh"
           bgcolor="white"
           overflow="hidden"
+          display="flex"
         >
           <img
             src={images[currentIndex].url}
@@ -67,7 +68,7 @@ const ImageModal: React.FC<ImageModalProps> = ({ images }) => {
               maxWidth: zoom ? '120%' : '100%',
               maxHeight: zoom ? '120%' : '100%',
               width: 'auto',
-              height: 'auto',
+              height: zoom ? '120%' : 'auto',
               cursor: zoom ? 'zoom-out' : 'zoom-in',
               transition: 'transform 0.3s',
               objectFit: 'contain',
