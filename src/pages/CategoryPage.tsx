@@ -27,20 +27,21 @@ function CategoryPage() {
   const [productsData, setProductsData] = useState<IProduct[] | null>(null);
   const [selectedFilter, setSelectedFilter] = useState<string>('Default');
   const [searchTerm, setSearchTerm] = useState<string>(''); // holds the user's search input
-  const [searchResults, setSearchResults] = useState<IProduct[] | null>(null); // holds the products returned from the search
 
-  const handleSearchChange = async (term: string) => {
-    if (term.trim()) {
-      const results = await searchProducts(term);
+  const handleSearchChange = async () => {
+    if (searchTerm.trim().length > 0) {
+      const results = await searchProducts(searchTerm);
       setProductsData(results);
     } else {
-      setSearchResults(null); // Reset search results if the term is empty
+      setSelectedFilter('');
     }
   };
 
   useEffect(() => {
     if (searchTerm.trim()) {
-      handleSearchChange(searchTerm);
+      handleSearchChange();
+    } else {
+      queryAllProducts(selectedFilter).then((data) => setProductsData(data));
     }
   }, [searchTerm]);
 

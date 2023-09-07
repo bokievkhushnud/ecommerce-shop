@@ -23,8 +23,8 @@ import FilterListIcon from '@mui/icons-material/FilterList';
 interface SearchAndFilterProps {
   selectedFilter: string;
   onFilterChange: (event: SelectChangeEvent<string>) => void;
-  searchTerm?: string;
-  onSearchChange?: (term: string) => void;
+  searchTerm: string;
+  onSearchChange: (term: string) => void;
 }
 
 const SearchAndFilter: React.FC<SearchAndFilterProps> = ({
@@ -51,7 +51,9 @@ const SearchAndFilter: React.FC<SearchAndFilterProps> = ({
         id="outlined-basic"
         label="Search"
         value={searchTerm}
-        onChange={(e) => onSearchChange && onSearchChange(e.target.value)}
+        onChange={(e) => {
+          onSearchChange(e.target.value);
+        }}
         variant="outlined"
         style={{ flex: 1, marginRight: '15px' }}
       />
