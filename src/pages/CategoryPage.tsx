@@ -26,24 +26,32 @@ function CategoryPage() {
   const [category, setCategory] = useState<ICategory | null>(null);
   const [productsData, setProductsData] = useState<IProduct[] | null>(null);
   const [selectedFilter, setSelectedFilter] = useState<string>('Default');
-  const [searchTerm, setSearchTerm] = useState<string>(''); // holds the user's search input
+  const [searchTerm, setSearchTerm] = useState<string>('');
 
-  const handleSearchChange = async () => {
-    if (searchTerm.trim().length > 0) {
+  const fetchProducts = async () => {
+    let sortOrder = '';
+    if (selectedFilter === 'Name (A-Z)') {
+      sortOrder = 'name.en-US.asc';
+    } else if (selectedFilter === 'Name (Z-A)') {
+      sortOrder = 'name.en-US.desc';
+    } else if (selectedFilter === 'Price: Low to High') {
+      sortOrder = 'price.asc';
+    } else if (selectedFilter === 'Price: High to Low') {
+      sortOrder = 'price.desc';
+    }
+
+    if (searchTerm) {
       const results = await searchProducts(searchTerm);
       setProductsData(results);
     } else {
-      setSelectedFilter('');
+      const data = await queryAllProducts(sortOrder);
+      setProductsData(data);
     }
   };
 
   useEffect(() => {
-    if (searchTerm.trim()) {
-      handleSearchChange();
-    } else {
-      queryAllProducts(selectedFilter).then((data) => setProductsData(data));
-    }
-  }, [searchTerm]);
+    fetchProducts();
+  }, [searchTerm, selectedFilter]);
 
   const defaultCategory: ICategory = {
     id: 'istdef',
@@ -58,27 +66,8 @@ function CategoryPage() {
     }
   }, [id]);
 
-  useEffect(() => {
-    queryAllProducts(selectedFilter).then((data) => setProductsData(data));
-  }, [selectedFilter]);
-
   const handleFilterChange = (event: SelectChangeEvent<string>) => {
-    const selectedValue = event.target.value;
-    setSelectedFilter(selectedValue);
-
-    let sortOrder = '';
-    if (selectedValue === 'Name (A-Z)') {
-      sortOrder = 'name.en-US.asc';
-    } else if (selectedValue === 'Name (Z-A)') {
-      sortOrder = 'name.en-US.desc';
-    } else if (selectedValue === 'Price: Low to High') {
-      sortOrder = 'price.asc';
-    } else if (selectedValue === 'Price: High to Low') {
-      sortOrder = 'price.desc';
-    } else {
-      sortOrder = ''; // for default
-    }
-    queryAllProducts(sortOrder).then((data) => setProductsData(data));
+    setSelectedFilter(event.target.value);
   };
 
   return (
