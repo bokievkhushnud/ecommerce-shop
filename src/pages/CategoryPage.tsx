@@ -11,7 +11,10 @@ import {
 
 import { ICategory, IProduct } from '../types';
 import { getCategoryByID } from '../commercetools-api/queryCategories';
-import { queryAllProducts } from '../commercetools-api/queryAllProducts';
+import {
+  queryAllProducts,
+  searchProducts,
+} from '../commercetools-api/queryAllProducts';
 
 import ProductCard from '../components/common/ProductCard';
 import CategorySidebar from '../components/common/CategorySidebar';
@@ -23,6 +26,23 @@ function CategoryPage() {
   const [category, setCategory] = useState<ICategory | null>(null);
   const [productsData, setProductsData] = useState<IProduct[] | null>(null);
   const [selectedFilter, setSelectedFilter] = useState<string>('Default');
+  const [searchTerm, setSearchTerm] = useState<string>(''); // holds the user's search input
+  const [searchResults, setSearchResults] = useState<IProduct[] | null>(null); // holds the products returned from the search
+
+  const handleSearchChange = async (term: string) => {
+    if (term.trim()) {
+      const results = await searchProducts(term);
+      setProductsData(results);
+    } else {
+      setSearchResults(null); // Reset search results if the term is empty
+    }
+  };
+
+  useEffect(() => {
+    if (searchTerm.trim()) {
+      handleSearchChange(searchTerm);
+    }
+  }, [searchTerm]);
 
   const defaultCategory: ICategory = {
     id: 'istdef',
@@ -74,6 +94,8 @@ function CategoryPage() {
             <SearchAndFilter
               selectedFilter={selectedFilter}
               onFilterChange={handleFilterChange}
+              searchTerm={searchTerm}
+              onSearchChange={setSearchTerm}
             />
 
             {category ? (

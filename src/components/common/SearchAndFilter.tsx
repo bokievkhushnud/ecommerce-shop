@@ -23,11 +23,15 @@ import FilterListIcon from '@mui/icons-material/FilterList';
 interface SearchAndFilterProps {
   selectedFilter: string;
   onFilterChange: (event: SelectChangeEvent<string>) => void;
+  searchTerm?: string;
+  onSearchChange?: (term: string) => void;
 }
 
 const SearchAndFilter: React.FC<SearchAndFilterProps> = ({
   selectedFilter,
   onFilterChange,
+  searchTerm,
+  onSearchChange,
 }) => {
   const [open, setOpen] = useState(false);
 
@@ -44,7 +48,10 @@ const SearchAndFilter: React.FC<SearchAndFilterProps> = ({
       style={{ display: 'flex', marginBottom: '20px', alignItems: 'center' }}
     >
       <TextField
+        id="outlined-basic"
         label="Search"
+        value={searchTerm}
+        onChange={(e) => onSearchChange && onSearchChange(e.target.value)}
         variant="outlined"
         style={{ flex: 1, marginRight: '15px' }}
       />

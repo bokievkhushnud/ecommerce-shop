@@ -130,3 +130,29 @@ export async function getProductByID(productId: string): Promise<any> {
     throw new Error('HTTP Error: ' + response.status);
   }
 }
+
+export async function searchProducts(query: string): Promise<any> {
+  const url: string = `https://api.${
+    process.env.REACT_APP_REGION
+  }.commercetools.com/${
+    process.env.REACT_APP_PROJECT_KEY
+  }/product-projections/search?limit=20&text.en-US=${encodeURIComponent(
+    query
+  )}&fuzzy=true`;
+  const bearerToken: string =
+    localStorage.getItem('accessToken') || (await getAccessToken());
+
+  const response = await fetch(url, {
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${bearerToken}`,
+    },
+  });
+
+  if (response.ok) {
+    const data = await response.json();
+    return data.results;
+  } else {
+    throw new Error('HTTP Error: ' + response.status);
+  }
+}
