@@ -10,8 +10,7 @@ import { IProduct } from '../../types';
 import { Link } from 'react-router-dom';
 
 const ProductCard: React.FC<IProduct> = (product) => {
-  console.log(product);
-  const { name, description, masterVariant } = product.masterData.current;
+  const { name, description, masterVariant } = product;
 
   const displayPrice = (centAmount: number) =>
     `$${(centAmount * 0.01).toFixed(2)}`;

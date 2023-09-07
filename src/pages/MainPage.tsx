@@ -1,7 +1,5 @@
 import React from 'react';
 import { Container, Typography, Box, Grid, Paper } from '@mui/material';
-import SearchAndFilter from '../components/common/SearchAndFilter';
-import DiscountBanner from '../components/common/DiscountBanner';
 import { queryCategories } from '../commercetools-api/queryCategories';
 import CategoryCard from '../components/common/CategoryCard';
 import { ICategory } from '../types';
@@ -12,7 +10,6 @@ const MainPage: React.FC = () => {
 
   useEffect(() => {
     queryCategories().then((data: ICategory[]) => {
-      console.log(data);
       setCategories(
         data.map((category) => ({
           id: category.id,

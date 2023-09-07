@@ -16,7 +16,7 @@ import ImageModal from '../components/specific/ImageModal';
 
 const ProductDetailPage: React.FC = () => {
   const { productId } = useParams<{ productId: string }>();
-  const [product, setProduct] = useState<IProduct | null>(null);
+  const [product, setProduct] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -36,6 +36,7 @@ const ProductDetailPage: React.FC = () => {
   if (loading) return <CircularProgress />;
   if (error) return <Typography variant="h6">Error: {error}</Typography>;
   if (!product) return <Typography variant="h6">Product not found.</Typography>;
+  console.log(product);
 
   const { name, description, masterVariant } = product.masterData.current;
 

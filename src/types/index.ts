@@ -65,41 +65,30 @@ export interface IProduct {
     };
     id: string;
   }[];
-  masterData: {
-    current: {
-      description: {
-        'en-US': string;
+
+  description: {
+    'en-US': string;
+  };
+  masterVariant: {
+    id: number;
+    images: {
+      dimensions: {
+        h: number;
+        w: number;
       };
-      masterVariant: {
-        id: number;
-        images: {
-          dimensions: {
-            h: number;
-            w: number;
+      url: string;
+    }[];
+    prices: [
+      {
+        value: {
+          centAmount: number;
+        };
+        discounted: {
+          value: {
+            centAmount: number;
           };
-          url: string;
-        }[];
-        prices: [
-          {
-            value: {
-              centAmount: number;
-            };
-            discounted: {
-              value: {
-                centAmount: number;
-              };
-            };
-          },
-        ];
-      };
-      categories: [
-        {
-          id: string;
-        },
-      ];
-      name: {
-        'en-US': string;
-      };
-    };
+        };
+      },
+    ];
   };
 }

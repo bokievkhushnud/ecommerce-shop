@@ -22,10 +22,10 @@ function CategoryPage() {
   const { id } = useParams<{ id?: string }>();
   const [category, setCategory] = useState<ICategory | null>(null);
   const [productsData, setProductsData] = useState<IProduct[] | null>(null);
-  const [selectedFilter, setSelectedFilter] = useState<string>('');
+  const [selectedFilter, setSelectedFilter] = useState<string>('Default');
 
   const defaultCategory: ICategory = {
-    id: '',
+    id: 'istdef',
     name: { 'en-US': 'All Categories' },
     slug: { 'en-US': '' },
     parent: null,
@@ -35,54 +35,29 @@ function CategoryPage() {
     if (id) {
       getCategoryByID(id).then((data) => setCategory(data));
     }
-    queryAllProducts().then((data) => setProductsData(data));
   }, [id]);
 
-  const sortProductsByName = () => {
-    if (productsData) {
-      console.log(productsData);
-      const sortedProducts = [...productsData].sort((a, b) =>
-        a.masterData.current.name['en-US'].localeCompare(
-          b.masterData.current.name['en-US']
-        )
-      );
-      setProductsData(sortedProducts);
-    }
-  };
-
-  const sortProductsByPrice = (boolean: boolean) => {
-    if (productsData) {
-      const sortedProducts = [...productsData].sort((a, b) => {
-        const priceA =
-          a.masterData.current.masterVariant.prices[0].discounted &&
-          a.masterData.current.masterVariant.prices[0].discounted.value
-            ? a.masterData.current.masterVariant.prices[0].discounted.value
-                .centAmount
-            : a.masterData.current.masterVariant.prices[0].value.centAmount;
-        const priceB =
-          b.masterData.current.masterVariant.prices[0].discounted &&
-          b.masterData.current.masterVariant.prices[0].discounted.value
-            ? b.masterData.current.masterVariant.prices[0].discounted.value
-                .centAmount
-            : b.masterData.current.masterVariant.prices[0].value.centAmount;
-
-        return boolean ? priceA - priceB : priceB - priceA;
-      });
-      setProductsData(sortedProducts);
-    }
-  };
+  useEffect(() => {
+    queryAllProducts(selectedFilter).then((data) => setProductsData(data));
+  }, [selectedFilter]);
 
   const handleFilterChange = (event: SelectChangeEvent<string>) => {
     const selectedValue = event.target.value;
     setSelectedFilter(selectedValue);
 
-    if (selectedValue === 'Name') {
-      sortProductsByName();
+    let sortOrder = '';
+    if (selectedValue === 'Name (A-Z)') {
+      sortOrder = 'name.en-US.asc';
+    } else if (selectedValue === 'Name (Z-A)') {
+      sortOrder = 'name.en-US.desc';
     } else if (selectedValue === 'Price: Low to High') {
-      sortProductsByPrice(true);
+      sortOrder = 'price.asc';
     } else if (selectedValue === 'Price: High to Low') {
-      sortProductsByPrice(false);
+      sortOrder = 'price.desc';
+    } else {
+      sortOrder = ''; // for default
     }
+    queryAllProducts(sortOrder).then((data) => setProductsData(data));
   };
 
   return (
@@ -96,12 +71,13 @@ function CategoryPage() {
           </Grid>
 
           <Grid item xs={12} sm={8}>
+            <SearchAndFilter
+              selectedFilter={selectedFilter}
+              onFilterChange={handleFilterChange}
+            />
+
             {category ? (
               <>
-                <SearchAndFilter
-                  selectedFilter={selectedFilter}
-                  onFilterChange={handleFilterChange}
-                />
                 <BreadcrumbNavigation breadcrumbs={category} />
                 <Typography variant="h4" gutterBottom>
                   {category.name['en-US']}
@@ -118,7 +94,7 @@ function CategoryPage() {
                 productsData.map((product, index) => {
                   if (
                     !id ||
-                    product.masterData.current.categories.some(
+                    product.categories.some(
                       (categoryofProduct) => categoryofProduct.id === id
                     )
                   ) {
