@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { createTheme } from '@mui/material/styles';
-import { Box, Container, Typography, Avatar } from '@mui/material';
+import { Box, Container, Typography, CardMedia, Link } from '@mui/material';
 import { ThemeProvider } from '@emotion/react';
-import BgImage from '../assets/images/jacopo-maia--gOUx23DNks-unsplash.jpg';
 
 const theme = createTheme({
   palette: {
@@ -28,24 +27,49 @@ const AboutUs = () => {
       >
         <ThemeProvider theme={theme}>
           <Box
+            borderRadius="50%"
             sx={{
-              width: 1,
-              height: 500,
-              backgroundColor: 'primary.main',
-              backgroundImage: { BgImage },
+              width: '100%',
+              borderRadius: '50%',
             }}
           >
-            <Typography
-              variant="h1"
-              sx={{
-                backgroundColor: 'primary.light',
-                border: 'solid 5px #000',
-                borderRadius: '10px',
-                padding: '1rem',
-              }}
-            >
-              ABOUT US
-            </Typography>
+            <Link href="https://rs.school/index.html" underline="none">
+              <img
+                src="https://rs.school/images/rs_school_js.svg"
+                alt="link The Rolling Scopes School website"
+                width={`${200}px`}
+                height={`${80}px`}
+              />
+            </Link>
+            <div>
+              <Typography
+                variant="body2"
+                sx={{
+                  backgroundColor: 'primary.light',
+                  padding: '1rem',
+                  textAlign: 'justify',
+                  fontSize: '1.1rem',
+                }}
+              >
+                Grandma's Basket online shop website was made for is a
+                graduation work for Javascript/Frontend course of The Rolling
+                Scopes School.
+              </Typography>
+              <Typography
+                variant="body2"
+                sx={{
+                  backgroundColor: 'primary.light',
+                  padding: '1rem',
+                  textAlign: 'justify',
+                  fontSize: '1.1rem',
+                }}
+              >
+                The Rolling Scopes School (RS School) is a free-of-charge and
+                community-based education program conducted by The Rolling
+                Scopes developer community since 2013. If you want to learn more
+                about Rs School and its courses, click on the RS School icon.
+              </Typography>
+            </div>
           </Box>
         </ThemeProvider>
       </Container>

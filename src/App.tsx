@@ -54,7 +54,7 @@ const App: React.FC = () => {
       element: <NotFoundPage />,
     },
     {
-      path: '/',
+      path: '/about-us',
       element: (
         <MainLayout>
           <AboutUs />
