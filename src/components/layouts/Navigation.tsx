@@ -17,10 +17,12 @@ import { handleLogout } from '../../utils/auth';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../../store/authSlice';
 import { RootState } from '../../store';
+import { getUserFromStorage } from '../../utils/auth';
 
 const pages = [
   { path: '/', name: 'Home' },
   { path: '/cart', name: 'Cart' },
+  { path: '/categories', name: 'Categories' },
 ];
 
 const ResponsiveAppBar: React.FC = () => {
@@ -29,6 +31,7 @@ const ResponsiveAppBar: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const isLoggedIn = useSelector((state: RootState) => state.auth.isLoggedIn);
+  const user = getUserFromStorage();
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
@@ -203,7 +206,9 @@ const ResponsiveAppBar: React.FC = () => {
             <Box sx={{ flexGrow: 0 }}>
               <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                  <Avatar
+                    alt={`${user?.firstName} ${user?.lastName}`}
+                  >{`${user?.firstName[0]}${user?.lastName[0]}`}</Avatar>
                 </IconButton>
               </Tooltip>
               <Menu
