@@ -1,7 +1,9 @@
 import React from 'react';
 import { createTheme } from '@mui/material/styles';
-import { Box, Container, Typography, CardMedia, Link } from '@mui/material';
+import { Box, Container, Typography, Link } from '@mui/material';
 import { ThemeProvider } from '@emotion/react';
+import Card from '../components/specific/aboutTeamCard';
+import teammatesData from '../assets/teammatesData';
 
 const theme = createTheme({
   palette: {
@@ -51,9 +53,9 @@ const AboutUs = () => {
                   fontSize: '1.1rem',
                 }}
               >
-                Grandma's Basket online shop website was made for is a
-                graduation work for Javascript/Frontend course of The Rolling
-                Scopes School.
+                Grandma's Basket online shop website was made is a graduation
+                work for Javascript/Frontend course of The Rolling Scopes
+                School.
               </Typography>
               <Typography
                 variant="body2"
@@ -71,6 +73,7 @@ const AboutUs = () => {
               </Typography>
             </div>
           </Box>
+          <div></div>
         </ThemeProvider>
       </Container>
     </>
