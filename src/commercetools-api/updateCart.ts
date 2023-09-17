@@ -1,4 +1,4 @@
-import { fetchCartByUserId } from './getCart';
+import { fetchCartByUserId } from './fetchCart';
 import { getUserFromStorage } from '../utils/auth';
 
 export async function updateCartItemQuantity(

@@ -7,10 +7,11 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import CartItem from './CartItem';
 import { useState, useEffect } from 'react';
-import { fetchCartByUserId } from '../../commercetools-api/getCart';
+import { fetchCartByUserId } from '../../commercetools-api/fetchCart';
 import CircularProgress from '@mui/material/CircularProgress';
 import { useNavigate } from 'react-router-dom'; // Import Link from react-router-dom
 import { adaptCartData } from '../../utils/helpers';
+import { getCart } from '../../commercetools-api/createCart';
 
 interface CartDrawerProps {
   open: boolean;
@@ -30,8 +31,11 @@ const CartDrawer: React.FC<CartDrawerProps> = ({
   useEffect(() => {
     if (open) {
       setIsLoading(true);
-      // Inside the useEffect where you fetch the cart data
-      fetchCartByUserId(customerID as string)
+
+      getCart()
+        .then(() => {
+          return fetchCartByUserId(customerID || '');
+        })
         .then((data) => {
           const adaptedData = adaptCartData(data);
           setCartData(adaptedData);
@@ -43,6 +47,8 @@ const CartDrawer: React.FC<CartDrawerProps> = ({
         });
     }
   }, [open, customerID]);
+
+  console.log(cartData);
 
   return (
     <Drawer
@@ -99,8 +105,8 @@ const CartDrawer: React.FC<CartDrawerProps> = ({
             >
               <CircularProgress />
             </div>
-          ) : cartData ? (
-            cartData?.lineItems.map((item: any, index: number) => (
+          ) : cartData?.lineItems?.length > 0 ? (
+            cartData.lineItems?.map((item: any, index: number) => (
               <CartItem
                 key={index}
                 cartId={cartData.cartId}
@@ -128,7 +134,7 @@ const CartDrawer: React.FC<CartDrawerProps> = ({
                 color="primary"
                 onClick={() => {
                   onClose();
-                  navigate('categories');
+                  navigate('/categories');
                 }}
               >
                 Browse Catalog

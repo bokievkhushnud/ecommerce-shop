@@ -14,7 +14,7 @@ async function fetchCartByUserId(customerID: string): Promise<any> {
 
   if (response.ok) {
     const data = await response.json();
-    return data; // You might need to adjust this based on the response structure
+    return data;
   } else {
     throw new Error('HTTP Error: ' + response.status);
   }

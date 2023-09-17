@@ -4,7 +4,10 @@ export async function loginUser(
   email: string,
   password: string
 ): Promise<void> {
-  getUserAccessToken(email, password);
+  try {
+    getUserAccessToken(email, password);
+  } catch {}
+
   const loginURL: string = `https://api.${process.env.REACT_APP_REGION}.commercetools.com/${process.env.REACT_APP_PROJECT_KEY}/login`;
   const bearerToken: string =
     localStorage.getItem('accessToken') || (await getAccessToken());
