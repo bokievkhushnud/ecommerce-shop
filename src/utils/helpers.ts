@@ -66,3 +66,23 @@ export const transformToApiFormat = (
 
   return userData;
 };
+
+export function adaptCartData(rawCartData: any) {
+  if (!rawCartData || !rawCartData.lineItems) {
+    return [];
+  }
+  const lineItems = rawCartData.lineItems.map((item: any) => {
+    return {
+      name: item.name['en-US'],
+      imageUrl: item.variant.images[0].url,
+      individualPrice: item.price.value.centAmount / 100,
+      quantity: item.quantity,
+      lineItemId: item.id,
+    };
+  });
+
+  return {
+    lineItems,
+    cartId: rawCartData.id,
+  };
+}
