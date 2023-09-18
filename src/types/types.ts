@@ -23,3 +23,13 @@ export type ImagesURL = {
   label: string;
   dimensions: { w: number; h: string };
 };
+
+export type CredentialsTypes = {
+  region: string;
+  projectKey: string;
+  clientID: string;
+  clientSecret: string;
+  authURL: string;
+  apiURL: string;
+  scopes: string;
+};
