@@ -47,12 +47,9 @@ function CategoryPage() {
     }
     if (allowfetching) {
       if (searchTerm) {
-        console.log('fetching');
         const results = await searchProducts(searchTerm);
         setProductsData(results);
       } else {
-        console.log('category choosen', category);
-        console.log('fetching');
         const data = await queryAllProducts(sortOrder, currentPage, category);
         setProductsData(data.results);
         setTotalCount(data.total);
@@ -68,14 +65,12 @@ function CategoryPage() {
   }, []);
 
   useEffect(() => {
-    console.log('new category/search/filter, fetch products', category);
     fetchProducts();
   }, [category, searchTerm, selectedFilter, currentPage]);
 
   useEffect(() => {
     if (productsData) {
       if (productsData.length === totalCount) {
-        console.log('stop fetching');
         setAllowFetching(false);
       }
     }
@@ -109,7 +104,6 @@ function CategoryPage() {
         (document.documentElement.scrollTop + window.innerHeight) <
       50
     ) {
-      console.log('scroll now');
       setCurrentPage((prev) => prev + 1);
     }
   };
