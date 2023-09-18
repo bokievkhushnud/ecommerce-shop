@@ -18,10 +18,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../../store/authSlice';
 import { RootState } from '../../store';
 import { getUserFromStorage } from '../../utils/auth';
+import CartDrawer from '../specific/CartDrawer';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 
 const pages = [
   { path: '/', name: 'Home' },
-  { path: '/cart', name: 'Cart' },
   { path: '/categories', name: 'Categories' },
 ];
 
@@ -32,6 +33,7 @@ const ResponsiveAppBar: React.FC = () => {
   const dispatch = useDispatch();
   const isLoggedIn = useSelector((state: RootState) => state.auth.isLoggedIn);
   const user = getUserFromStorage();
+  const [openCart, setOpenCart] = React.useState(false);
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
@@ -117,28 +119,33 @@ const ResponsiveAppBar: React.FC = () => {
                   <Typography textAlign="center">{page.name}</Typography>
                 </MenuItem>
               ))}
-              {
-                <MenuItem
-                  key="Login"
-                  onClick={() => {
-                    navigate('/login');
-                    handleCloseNavMenu();
-                  }}
-                >
-                  <Typography textAlign="center">Login</Typography>
-                </MenuItem>
-              }
-              {
-                <MenuItem
-                  key="Register"
-                  onClick={() => {
-                    navigate('/register');
-                    handleCloseNavMenu();
-                  }}
-                >
-                  <Typography textAlign="center">Register</Typography>
-                </MenuItem>
-              }
+
+              <MenuItem
+                key="Login"
+                onClick={() => {
+                  navigate('/login');
+                  handleCloseNavMenu();
+                }}
+              >
+                <Typography textAlign="center">Login</Typography>
+              </MenuItem>
+
+              <MenuItem
+                key="Register"
+                onClick={() => {
+                  navigate('/register');
+                  handleCloseNavMenu();
+                }}
+              >
+                <Typography textAlign="center">Register</Typography>
+              </MenuItem>
+              <IconButton
+                edge="end"
+                color="inherit"
+                onClick={() => setOpenCart(true)}
+              >
+                <ShoppingCartIcon />
+              </IconButton>
             </Menu>
           </Box>
           <LunchDiningOutlinedIcon
@@ -176,30 +183,34 @@ const ResponsiveAppBar: React.FC = () => {
                 {page.name}
               </Button>
             ))}
-            {
-              <Button
-                key="Login"
-                onClick={() => {
-                  navigate('/login');
-                  handleCloseNavMenu();
-                }}
-                sx={{ my: 2, color: 'white', display: 'block' }}
-              >
-                Login
-              </Button>
-            }
-            {
-              <Button
-                key="Register"
-                onClick={() => {
-                  navigate('/register');
-                  handleCloseNavMenu();
-                }}
-                sx={{ my: 2, color: 'white', display: 'block' }}
-              >
-                Register
-              </Button>
-            }
+            <Button
+              key="Login"
+              onClick={() => {
+                navigate('/login');
+                handleCloseNavMenu();
+              }}
+              sx={{ my: 2, color: 'white', display: 'block' }}
+            >
+              Login
+            </Button>
+
+            <Button
+              key="Register"
+              onClick={() => {
+                navigate('/register');
+                handleCloseNavMenu();
+              }}
+              sx={{ my: 2, color: 'white', display: 'block' }}
+            >
+              Register
+            </Button>
+            <IconButton
+              edge="end"
+              color="inherit"
+              onClick={() => setOpenCart(true)}
+            >
+              <ShoppingCartIcon />
+            </IconButton>
           </Box>
 
           {isLoggedIn && (
@@ -251,6 +262,11 @@ const ResponsiveAppBar: React.FC = () => {
           )}
         </Toolbar>
       </Container>
+      <CartDrawer
+        open={openCart}
+        onClose={() => setOpenCart(false)}
+        customerID={user?.id}
+      />
     </AppBar>
   );
 };

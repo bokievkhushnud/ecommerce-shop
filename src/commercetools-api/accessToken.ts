@@ -1,5 +1,4 @@
 export async function getAccessToken(): Promise<string> {
-  console.log('new access token');
   const authURL = `https://auth.${process.env.REACT_APP_REGION}.commercetools.com/oauth/token`;
   const credentials = btoa(
     `${process.env.REACT_APP_CLIENT_ID}:${process.env.REACT_APP_CLIENT_SECRET}`
