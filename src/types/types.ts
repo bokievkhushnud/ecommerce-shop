@@ -28,7 +28,6 @@ export type TeammateData = {
   name: string;
   role: string;
   intro: string;
-  photo: string;
   github: string;
-  constributions: string[];
+  contributions: string[];
 };

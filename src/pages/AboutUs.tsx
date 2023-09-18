@@ -5,6 +5,10 @@ import { ThemeProvider } from '@emotion/react';
 import Card from '../components/specific/aboutTeamCard';
 import teammatesData from '../assets/teammatesData';
 
+import photoIT from '../assets/images/Irina-photo.jpg';
+import photoKB from '../assets/images/Khushnud-photo.jpg';
+import photoYK from '../assets/images/Yulia-photo.jpg';
+
 const theme = createTheme({
   palette: {
     primary: {
@@ -16,6 +20,8 @@ const theme = createTheme({
 });
 
 const AboutUs = () => {
+  const images = [photoIT, photoKB, photoYK];
+
   return (
     <>
       <Container
@@ -73,7 +79,24 @@ const AboutUs = () => {
               </Typography>
             </div>
           </Box>
-          <div></div>
+          <div>
+            {teammatesData.map((teammate, index) => {
+              return (
+                <div className="card-contatiner" key={index + 1}>
+                  <div className="card-photo">
+                    <img src={images[index]} alt="teammate" />
+                  </div>
+                  <Card
+                    name={teammate.name}
+                    role={teammate.role}
+                    github={teammate.github}
+                    contributions={teammate.contributions}
+                    intro={teammate.intro}
+                  />
+                </div>
+              );
+            })}
+          </div>
         </ThemeProvider>
       </Container>
     </>
