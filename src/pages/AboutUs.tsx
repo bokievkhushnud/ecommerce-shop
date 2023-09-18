@@ -28,7 +28,6 @@ const AboutUs = () => {
       >
         <ThemeProvider theme={theme}>
           <Box
-            borderRadius="50%"
             sx={{
               width: '100%',
               borderRadius: '50%',
@@ -40,10 +39,14 @@ const AboutUs = () => {
                 alt="link The Rolling Scopes School website"
                 width={`${200}px`}
                 height={`${80}px`}
-                style={{ border: '3px dashed #000' }}
+                style={{ border: '3px dashed #000', margin: '0 auto' }}
               />
             </Link>
-            <div>
+            <div
+              style={{
+                margin: '0 auto',
+              }}
+            >
               <Typography
                 variant="body2"
                 sx={{
@@ -51,10 +54,12 @@ const AboutUs = () => {
                   padding: '1rem',
                   textAlign: 'justify',
                   fontSize: '1.1rem',
+                  margin: '0 auto',
                 }}
               >
                 Grandma's Basket online shop website is a graduation work for
-                Javascript/Frontend course of The Rolling Scopes School.
+                Javascript/Frontend course of The Rolling Scopes School' final
+                task.
               </Typography>
               <Typography
                 variant="body2"
@@ -63,6 +68,7 @@ const AboutUs = () => {
                   padding: '1rem',
                   textAlign: 'justify',
                   fontSize: '1.1rem',
+                  margin: '0 auto',
                 }}
               >
                 The Rolling Scopes School (RS School) is a free-of-charge and
@@ -72,7 +78,7 @@ const AboutUs = () => {
               </Typography>
             </div>
           </Box>
-          <div style={{ margin: '3% 0' }}>
+          <div style={{ margin: '3% auto' }}>
             {teammatesData.map((teammate, index) => {
               return (
                 <div style={{ marginBottom: '3%' }}>
@@ -81,7 +87,7 @@ const AboutUs = () => {
                     key={index + 1}
                     sx={{
                       display: 'flex',
-                      flexDirection: isDesktop ? 'row' : 'column',
+                      flexDirection: isDesktop ? 'column' : 'row',
                     }}
                   >
                     <div className="card-photo">
@@ -93,8 +99,8 @@ const AboutUs = () => {
                           height: '100%',
                           maxWidth: '330px',
                           maxHeight: '400px',
-                          minWidth: '230px',
-                          minHeight: '300px',
+                          minWidth: '200px',
+                          minHeight: '270px',
                           borderRadius: '15px',
                         }}
                       />
@@ -107,7 +113,9 @@ const AboutUs = () => {
                     />
                   </Box>
                   <Box>
-                    <Typography>{bios[index]}</Typography>
+                    <Typography sx={{ padding: '0 5px' }}>
+                      {bios[index]}
+                    </Typography>
                   </Box>
                 </div>
               );
