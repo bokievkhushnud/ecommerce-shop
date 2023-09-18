@@ -13,6 +13,8 @@ import { useNavigate } from 'react-router-dom';
 import { adaptCartData } from '../../utils/helpers';
 import { getCart } from '../../commercetools-api/createCart';
 import { deleteCart } from '../../commercetools-api/delteCart';
+import applyPromoCode from './handlePromoCode';
+import { toast } from 'react-toastify';
 
 interface CartDrawerProps {
   open: boolean;
@@ -27,12 +29,12 @@ const CartDrawer: React.FC<CartDrawerProps> = ({
 }) => {
   const [cartData, setCartData] = useState<any>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [promoCode, setPromoCode] = useState<string>('');
   const navigate = useNavigate();
 
   useEffect(() => {
     if (open) {
       setIsLoading(true);
-
       getCart()
         .then(() => {
           return fetchCartByUserId(customerID || '');
@@ -58,8 +60,34 @@ const CartDrawer: React.FC<CartDrawerProps> = ({
     }
   };
 
-  let totalAmount = cartData?.lineItems?.reduce(
-    (acc: number, item: any) => acc + item.individualPrice * item.quantity,
+  const handleApplyPromoCode = async () => {
+    try {
+      setIsLoading(true);
+      const updatedCartData = await applyPromoCode(
+        cartData.cartId,
+        cartData.version,
+        promoCode
+      );
+      setCartData(adaptCartData(updatedCartData));
+      setIsLoading(false);
+      toast.success('Promo code applied successfully!');
+    } catch (error) {
+      setIsLoading(false);
+      toast.error('Failed to apply promo code: ' + error);
+      console.error('Failed to apply promo code:', error);
+    }
+  };
+
+  // Calculate original total amount
+  let originalTotalAmount = cartData?.lineItems?.reduce(
+    (acc: number, item: any) => acc + item.originalPrice * item.quantity,
+    0
+  );
+
+  // Calculate discounted total amount
+  let discountedTotalAmount = cartData?.lineItems?.reduce(
+    (acc: number, item: any) =>
+      acc + (item.discountedPrice || item.originalPrice) * item.quantity,
     0
   );
 
@@ -72,7 +100,6 @@ const CartDrawer: React.FC<CartDrawerProps> = ({
         width: '40%',
         maxWidth: '400px',
         '@media (min-width: 900px)': {
-          // This applies for screens wider than 900px (around the md breakpoint)
           width: '60%',
           maxWidth: '800px',
         },
@@ -80,13 +107,8 @@ const CartDrawer: React.FC<CartDrawerProps> = ({
     >
       <div
         role="presentation"
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          width: '100%',
-        }}
+        style={{ display: 'flex', flexDirection: 'column', width: '100%' }}
       >
-        {/* Cart Header */}
         <div
           style={{
             display: 'flex',
@@ -104,8 +126,6 @@ const CartDrawer: React.FC<CartDrawerProps> = ({
             <CloseIcon />
           </IconButton>
         </div>
-
-        {/* Cart Items */}
         <List>
           {isLoading ? (
             <div
@@ -119,14 +139,15 @@ const CartDrawer: React.FC<CartDrawerProps> = ({
               <CircularProgress />
             </div>
           ) : cartData?.lineItems?.length > 0 ? (
-            cartData.lineItems?.map((item: any, index: number) => (
+            cartData.lineItems.map((item: any, index: number) => (
               <CartItem
                 key={index}
                 cartId={cartData.cartId}
                 lineItemId={item.lineItemId}
                 name={item.name}
                 imageUrl={item.imageUrl}
-                individualPrice={item.individualPrice}
+                discountedPrice={item.discountedPrice}
+                originalPrice={item.originalPrice}
                 quantity={item.quantity}
                 onQuantityChange={setCartData}
               />
@@ -155,8 +176,6 @@ const CartDrawer: React.FC<CartDrawerProps> = ({
             </div>
           )}
         </List>
-
-        {/* Cart Footer */}
         <div
           style={{
             padding: '20px',
@@ -164,16 +183,55 @@ const CartDrawer: React.FC<CartDrawerProps> = ({
             backgroundColor: '#F5F5F5',
           }}
         >
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              padding: '15px',
+              borderTop: '1px solid #E0E0E0',
+              borderBottom: '1px solid #E0E0E0',
+              backgroundColor: '#F5F5F5',
+            }}
+          >
+            <input
+              type="text"
+              value={promoCode}
+              onChange={(e) => setPromoCode(e.target.value)}
+              placeholder="Enter Promo Code"
+              style={{ padding: '8px', flex: '1', marginRight: '8px' }}
+            />
+            <Button
+              variant="outlined"
+              color="primary"
+              onClick={handleApplyPromoCode}
+              disabled={!promoCode.trim()}
+            >
+              Apply
+            </Button>
+          </div>
+          {discountedTotalAmount !== originalTotalAmount && (
+            <Typography
+              variant="body2"
+              style={{
+                textDecoration: 'line-through',
+                opacity: 0.6,
+                marginBottom: '8px',
+              }}
+            >
+              Original Total: ${originalTotalAmount?.toFixed(2)}
+            </Typography>
+          )}
           <Typography
             variant="h6"
             style={{ fontWeight: 600, marginBottom: '20px' }}
           >
-            Total: ${totalAmount?.toFixed(2)}
+            Total: ${discountedTotalAmount?.toFixed(2)}
           </Typography>
           <Button variant="contained" color="primary" fullWidth>
             Proceed to Checkout
           </Button>
-          {cartData?.lineItems.length ? (
+          {cartData?.lineItems?.length ? (
             <Button
               variant="text"
               color="error"
