@@ -84,5 +84,6 @@ export function adaptCartData(rawCartData: any) {
   return {
     lineItems,
     cartId: rawCartData.id,
+    version: rawCartData.version,
   };
 }

@@ -8,8 +8,12 @@ import IconButton from '@mui/material/IconButton';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import { useState } from 'react';
-import { updateCartItemQuantity } from '../../commercetools-api/updateCart';
+import {
+  updateCartItemQuantity,
+  removeCartItem,
+} from '../../commercetools-api/updateCart';
 import { adaptCartData } from '../../utils/helpers';
+import DeleteIcon from '@mui/icons-material/Delete'; // Import the delete icon
 
 interface CartItemProps {
   cartId: string;
@@ -46,6 +50,17 @@ const CartItem: React.FC<CartItemProps> = ({
       onQuantityChange(adaptCartData(updatedData));
     } catch (error) {
       console.error('Failed to update cart item quantity:', error);
+    }
+    setIsLoading(false);
+  };
+
+  const handleDeleteItem = async () => {
+    setIsLoading(true);
+    try {
+      let updatedData = await removeCartItem(cartId, lineItemId);
+      onQuantityChange(adaptCartData(updatedData)); // Refresh the cart after deletion
+    } catch (error) {
+      console.error('Failed to delete cart item:', error);
     }
     setIsLoading(false);
   };
@@ -102,6 +117,14 @@ const CartItem: React.FC<CartItemProps> = ({
             <Typography variant="body2" marginLeft="12px">
               Total: ${(individualPrice * currentQuantity).toFixed(2)}
             </Typography>
+            <IconButton
+              size="small"
+              color="secondary"
+              onClick={handleDeleteItem}
+              disabled={isLoading}
+            >
+              <DeleteIcon fontSize="small" />
+            </IconButton>
           </Box>
         </Box>
       </CardContent>

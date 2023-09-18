@@ -9,9 +9,10 @@ import CartItem from './CartItem';
 import { useState, useEffect } from 'react';
 import { fetchCartByUserId } from '../../commercetools-api/fetchCart';
 import CircularProgress from '@mui/material/CircularProgress';
-import { useNavigate } from 'react-router-dom'; // Import Link from react-router-dom
+import { useNavigate } from 'react-router-dom';
 import { adaptCartData } from '../../utils/helpers';
 import { getCart } from '../../commercetools-api/createCart';
+import { deleteCart } from '../../commercetools-api/delteCart';
 
 interface CartDrawerProps {
   open: boolean;
@@ -48,7 +49,19 @@ const CartDrawer: React.FC<CartDrawerProps> = ({
     }
   }, [open, customerID]);
 
-  console.log(cartData);
+  const handleClearCart = async () => {
+    try {
+      await deleteCart(cartData.cartId, cartData.version);
+      setCartData(null); // Clear the local cart state
+    } catch (error) {
+      console.error('Error clearing the cart:', error);
+    }
+  };
+
+  let totalAmount = cartData?.lineItems?.reduce(
+    (acc: number, item: any) => acc + item.individualPrice * item.quantity,
+    0
+  );
 
   return (
     <Drawer
@@ -155,11 +168,22 @@ const CartDrawer: React.FC<CartDrawerProps> = ({
             variant="h6"
             style={{ fontWeight: 600, marginBottom: '20px' }}
           >
-            Total: $100.00 {/* Placeholder amount */}
+            Total: ${totalAmount?.toFixed(2)}
           </Typography>
           <Button variant="contained" color="primary" fullWidth>
             Proceed to Checkout
           </Button>
+          {cartData?.lineItems.length ? (
+            <Button
+              variant="text"
+              color="error"
+              fullWidth
+              onClick={handleClearCart}
+              style={{ marginTop: '10px' }}
+            >
+              Clear Cart
+            </Button>
+          ) : null}
         </div>
       </div>
     </Drawer>
