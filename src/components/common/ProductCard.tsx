@@ -1,13 +1,8 @@
 import React from 'react';
-import {
-  CardContent,
-  CardActionArea,
-  CardMedia,
-  Typography,
-  Box,
-} from '@mui/material';
 import { IProduct } from '../../types';
 import { Link } from 'react-router-dom';
+import { ButtonAddToCart } from '../specific/ButtonAddToCart';
+import './ProductCard.scss';
 
 const ProductCard: React.FC<IProduct> = (product) => {
   const { name, description, masterVariant } = product;
@@ -15,61 +10,54 @@ const ProductCard: React.FC<IProduct> = (product) => {
   const displayPrice = (centAmount: number) =>
     `$${(centAmount * 0.01).toFixed(2)}`;
 
+  const redirectToProduct = (e: React.MouseEvent) => {
+    console.log(e.target);
+    if (!(e.target instanceof HTMLButtonElement)) {
+      window.location.href = `/products/${product.id}`;
+    } else {
+      e.stopPropagation();
+    }
+  };
+
   return (
-    <Link to={`/products/${product.id}`} style={{ textDecoration: 'none' }}>
-      <CardActionArea>
-        <CardMedia
-          image={masterVariant.images[0].url}
-          title={name['en-US']}
-          style={{ paddingTop: '100%' }}
-        />
-        <CardContent>
-          <Typography variant="body1" noWrap style={{ width: '90%' }}>
-            {name['en-US']}
-          </Typography>
-          <Typography
-            variant="body2"
-            noWrap
-            style={{ width: '90%', color: 'gray' }}
-          >
-            {description['en-US']}
-          </Typography>
-          {masterVariant.prices.length ? (
-            <Box mt={1}>
-              {masterVariant.prices[0].discounted &&
-              masterVariant.prices[0].discounted.value ? (
-                <>
-                  <Typography
-                    variant="body2"
-                    style={{
-                      textDecoration: 'line-through',
-                      display: 'inline-block',
-                      marginRight: '8px',
-                    }}
-                  >
-                    {displayPrice(masterVariant.prices[0].value.centAmount)}
-                  </Typography>
-                  <Typography
-                    variant="body2"
-                    style={{ color: 'red', display: 'inline-block' }}
-                  >
-                    {displayPrice(
-                      masterVariant.prices[0].discounted.value.centAmount
-                    )}
-                  </Typography>
-                </>
-              ) : (
-                <Typography variant="body2">
+    <div className="product-card" onClick={(e) => redirectToProduct(e)}>
+      <div
+        className="product-image"
+        style={{ backgroundImage: `url(${masterVariant.images[0].url})` }}
+      ></div>
+      <div className="product-name">
+        {name['en-US'].slice(0, 35).concat('...')}
+      </div>
+      <div className="product-description">
+        {description['en-US'].slice(0, 35).concat('...')}
+      </div>
+      <div className="product-prices">
+        {masterVariant.prices.length ? (
+          <div className="product-price">
+            {masterVariant.prices[0].discounted &&
+            masterVariant.prices[0].discounted.value ? (
+              <>
+                <span className="discounted-price">
+                  {displayPrice(
+                    masterVariant.prices[0].discounted.value.centAmount
+                  )}
+                </span>{' '}
+                <span className="original-price original-price_discounted">
                   {displayPrice(masterVariant.prices[0].value.centAmount)}
-                </Typography>
-              )}
-            </Box>
-          ) : (
-            <Typography variant="body2">$0.00</Typography>
-          )}
-        </CardContent>
-      </CardActionArea>
-    </Link>
+                </span>
+              </>
+            ) : (
+              <span className="original-price">
+                {displayPrice(masterVariant.prices[0].value.centAmount)}
+              </span>
+            )}
+          </div>
+        ) : (
+          <div className="product-price">$0.00</div>
+        )}
+        <ButtonAddToCart productId={product.id}></ButtonAddToCart>
+      </div>
+    </div>
   );
 };
 
