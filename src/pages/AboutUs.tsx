@@ -2,25 +2,18 @@ import React from 'react';
 import { createTheme } from '@mui/material/styles';
 import { Box, Container, Typography, Link } from '@mui/material';
 import { ThemeProvider } from '@emotion/react';
+import { useTheme } from '@mui/material/styles';
 import Card from '../components/specific/aboutTeamCard';
-import teammatesData from '../assets/teammatesData';
+import { teammatesData, bios } from '../assets/teammatesData';
 
 import photoIT from '../assets/images/Irina-photo.jpg';
 import photoKB from '../assets/images/Khushnud-photo.jpg';
 import photoYK from '../assets/images/Yulia-photo.jpg';
 
-const theme = createTheme({
-  palette: {
-    primary: {
-      main: '#4caf50',
-      light: '#ffffff9f',
-      contrastText: '#fff',
-    },
-  },
-});
-
 const AboutUs = () => {
   const images = [photoIT, photoKB, photoYK];
+  const theme = useTheme();
+  const isDesktop = theme.breakpoints.up('md');
 
   return (
     <>
@@ -28,7 +21,7 @@ const AboutUs = () => {
         component="section"
         sx={{
           margin: 0,
-          padding: 0,
+          padding: '5% 0',
           width: 1,
           height: 1,
         }}
@@ -47,6 +40,7 @@ const AboutUs = () => {
                 alt="link The Rolling Scopes School website"
                 width={`${200}px`}
                 height={`${80}px`}
+                style={{ border: '3px dashed #000' }}
               />
             </Link>
             <div>
@@ -59,9 +53,8 @@ const AboutUs = () => {
                   fontSize: '1.1rem',
                 }}
               >
-                Grandma's Basket online shop website was made is a graduation
-                work for Javascript/Frontend course of The Rolling Scopes
-                School.
+                Grandma's Basket online shop website is a graduation work for
+                Javascript/Frontend course of The Rolling Scopes School.
               </Typography>
               <Typography
                 variant="body2"
@@ -79,20 +72,43 @@ const AboutUs = () => {
               </Typography>
             </div>
           </Box>
-          <div>
+          <div style={{ margin: '3% 0' }}>
             {teammatesData.map((teammate, index) => {
               return (
-                <div className="card-contatiner" key={index + 1}>
-                  <div className="card-photo">
-                    <img src={images[index]} alt="teammate" />
-                  </div>
-                  <Card
-                    name={teammate.name}
-                    role={teammate.role}
-                    github={teammate.github}
-                    contributions={teammate.contributions}
-                    intro={teammate.intro}
-                  />
+                <div style={{ marginBottom: '3%' }}>
+                  <Box
+                    className="card-contatiner"
+                    key={index + 1}
+                    sx={{
+                      display: 'flex',
+                      flexDirection: isDesktop ? 'row' : 'column',
+                    }}
+                  >
+                    <div className="card-photo">
+                      <img
+                        src={images[index]}
+                        alt="teammate"
+                        style={{
+                          width: '100%',
+                          height: '100%',
+                          maxWidth: '330px',
+                          maxHeight: '400px',
+                          minWidth: '230px',
+                          minHeight: '300px',
+                          borderRadius: '15px',
+                        }}
+                      />
+                    </div>
+                    <Card
+                      name={teammate.name}
+                      role={teammate.role}
+                      github={teammate.github}
+                      contributions={teammate.contributions}
+                    />
+                  </Box>
+                  <Box>
+                    <Typography>{bios[index]}</Typography>
+                  </Box>
                 </div>
               );
             })}

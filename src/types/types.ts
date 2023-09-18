@@ -27,7 +27,6 @@ export type ImagesURL = {
 export type TeammateData = {
   name: string;
   role: string;
-  intro: string;
   github: string;
   contributions: string[];
 };
