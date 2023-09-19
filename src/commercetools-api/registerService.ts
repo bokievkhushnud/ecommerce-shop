@@ -1,6 +1,7 @@
 import { getAccessToken } from './accessToken';
 import { FormData } from '../types/types';
 import { transformToApiFormat } from '../utils/helpers';
+import { creds } from '../assets/credentials';
 
 export async function registerCustomer(
   formData: FormData,
@@ -10,7 +11,7 @@ export async function registerCustomer(
 ): Promise<any> {
   const accessToken =
     localStorage.getItem('accessToken') || (await getAccessToken());
-  const registrationURL = `https://api.${process.env.REACT_APP_REGION}.commercetools.com/${process.env.REACT_APP_PROJECT_KEY}/customers`;
+  const registrationURL = `https://api.${creds.region}.commercetools.com/${creds.projectKey}/customers`;
 
   return fetch(registrationURL, {
     method: 'POST',

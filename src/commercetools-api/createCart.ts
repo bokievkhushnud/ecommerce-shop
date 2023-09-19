@@ -1,9 +1,10 @@
 // api to create a cart
 import { getUserFromStorage } from '../utils/auth';
 import { fetchCartByUserId } from './fetchCart';
+import { creds } from '../assets/credentials';
 
 async function createCart(): Promise<any> {
-  const createCartURL: string = `https://api.${process.env.REACT_APP_REGION}.commercetools.com/${process.env.REACT_APP_PROJECT_KEY}/me/carts`;
+  const createCartURL: string = `https://api.${creds.region}.commercetools.com/${creds.projectKey}/me/carts`;
   const bearerToken: string = localStorage.getItem('userAccessToken') || '';
   const userId = getUserFromStorage()?.id;
   const cartData = {

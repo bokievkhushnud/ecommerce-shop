@@ -1,7 +1,8 @@
 import { getAccessToken } from './accessToken';
+import { creds } from '../assets/credentials';
 
 async function fetchCartByUserId(customerID: string): Promise<any> {
-  const cartURL: string = `https://api.${process.env.REACT_APP_REGION}.commercetools.com/${process.env.REACT_APP_PROJECT_KEY}/carts/customer-id=${customerID}`;
+  const cartURL: string = `https://api.${creds.region}.commercetools.com/${creds.projectKey}/carts/customer-id=${customerID}`;
   const bearerToken: string =
     localStorage.getItem('accessToken') || (await getAccessToken());
 

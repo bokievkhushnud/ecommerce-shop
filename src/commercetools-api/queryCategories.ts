@@ -1,7 +1,8 @@
 import { getAccessToken } from './accessToken';
+import { creds } from '../assets/credentials';
 
 async function queryCategories(): Promise<any> {
-  const loginURL: string = `https://api.${process.env.REACT_APP_REGION}.commercetools.com/${process.env.REACT_APP_PROJECT_KEY}/categories`;
+  const loginURL: string = `https://api.${creds.region}.commercetools.com/${creds.projectKey}/categories`;
   const bearerToken: string =
     localStorage.getItem('accessToken') || (await getAccessToken());
 
@@ -21,7 +22,7 @@ async function queryCategories(): Promise<any> {
 }
 
 async function getCategoryByID(id: string): Promise<any> {
-  const loginURL: string = `https://api.${process.env.REACT_APP_REGION}.commercetools.com/${process.env.REACT_APP_PROJECT_KEY}/categories/${id}`;
+  const loginURL: string = `https://api.${creds.region}.commercetools.com/${creds.projectKey}/categories/${id}`;
   const bearerToken: string =
     localStorage.getItem('accessToken') || (await getAccessToken());
 

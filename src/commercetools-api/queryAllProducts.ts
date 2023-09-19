@@ -1,4 +1,5 @@
 import { getAccessToken } from './accessToken';
+import { creds } from '../assets/credentials';
 
 export async function queryAllProducts(sortOrder: string): Promise<any> {
   let sortParam = '';
@@ -22,7 +23,7 @@ export async function queryAllProducts(sortOrder: string): Promise<any> {
     }
   }
 
-  const url: string = `https://api.${process.env.REACT_APP_REGION}.commercetools.com/${process.env.REACT_APP_PROJECT_KEY}/product-projections/search?${sortParam}`;
+  const url: string = `https://api.${creds.region}.commercetools.com/${creds.projectKey}/product-projections/search?${sortParam}`;
   const bearerToken: string =
     localStorage.getItem('accessToken') || (await getAccessToken());
 
@@ -92,7 +93,7 @@ export async function fetchFilteredProducts(
       filterParams += '&filter=attributes.portionSize:exact("large")';
   }
 
-  const url: string = `https://api.${process.env.REACT_APP_REGION}.commercetools.com/${process.env.REACT_APP_PROJECT_KEY}/product-projections?limit=100${filterParams}`;
+  const url: string = `https://api.${creds.region}.commercetools.com/${creds.projectKey}/product-projections?limit=100${filterParams}`;
   const bearerToken: string =
     localStorage.getItem('accessToken') || (await getAccessToken());
 
@@ -112,7 +113,7 @@ export async function fetchFilteredProducts(
 }
 
 export async function getProductByID(productId: string): Promise<any> {
-  const productURL: string = `https://api.${process.env.REACT_APP_REGION}.commercetools.com/${process.env.REACT_APP_PROJECT_KEY}/products/${productId}`;
+  const productURL: string = `https://api.${creds.region}.commercetools.com/${creds.projectKey}/products/${productId}`;
   const bearerToken: string =
     localStorage.getItem('accessToken') || (await getAccessToken());
 
@@ -132,10 +133,8 @@ export async function getProductByID(productId: string): Promise<any> {
 }
 
 export async function searchProducts(query: string): Promise<any> {
-  const url: string = `https://api.${
-    process.env.REACT_APP_REGION
-  }.commercetools.com/${
-    process.env.REACT_APP_PROJECT_KEY
+  const url: string = `https://api.${creds.region}.commercetools.com/${
+    creds.projectKey
   }/product-projections/search?limit=20&text.en-US=${encodeURIComponent(
     query
   )}&fuzzy=true`;

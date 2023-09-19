@@ -1,4 +1,5 @@
 import { getAccessToken } from './accessToken';
+import { creds } from '../assets/credentials';
 
 export async function loginUser(
   email: string,
@@ -8,7 +9,7 @@ export async function loginUser(
     getUserAccessToken(email, password);
   } catch {}
 
-  const loginURL: string = `https://api.${process.env.REACT_APP_REGION}.commercetools.com/${process.env.REACT_APP_PROJECT_KEY}/login`;
+  const loginURL: string = `https://api.${creds.region}.commercetools.com/${creds.projectKey}/login`;
   const bearerToken: string =
     localStorage.getItem('accessToken') || (await getAccessToken());
 
@@ -32,17 +33,15 @@ async function getUserAccessToken(
   email: string,
   password: string
 ): Promise<string> {
-  const loginURL: string = `https://auth.${process.env.REACT_APP_REGION}.commercetools.com/oauth/${process.env.REACT_APP_PROJECT_KEY}/customers/token`;
-  const credentials = btoa(
-    `${process.env.REACT_APP_CLIENT_ID}:${process.env.REACT_APP_CLIENT_SECRET}`
-  );
+  const loginURL: string = `https://auth.${creds.region}.commercetools.com/oauth/${creds.projectKey}/customers/token`;
+  const credentials = btoa(`${creds.clientID}:${creds.clientSecret}`);
   const response = await fetch(loginURL, {
     method: 'POST',
     headers: {
       Authorization: `Basic ${credentials}`,
       'Content-Type': 'application/x-www-form-urlencoded',
     },
-    body: `grant_type=password&username=${email}&password=${password}&scope=${process.env.REACT_APP_SCOPES}`,
+    body: `grant_type=password&username=${email}&password=${password}&scope=${creds.scopes}`,
   });
 
   if (response.ok) {

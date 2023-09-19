@@ -1,12 +1,13 @@
 import { fetchCartByUserId } from './fetchCart';
 import { getUserFromStorage } from '../utils/auth';
+import { creds } from '../assets/credentials';
 
 export async function updateCartItemQuantity(
   cartId: string,
   lineItemId: string,
   newQuantity: number
 ): Promise<any> {
-  const updateURL: string = `https://api.${process.env.REACT_APP_REGION}.commercetools.com/${process.env.REACT_APP_PROJECT_KEY}/me/carts/${cartId}`;
+  const updateURL: string = `https://api.${creds.region}.commercetools.com/${creds.projectKey}/me/carts/${cartId}`;
   const bearerToken: string = localStorage.getItem('userAccessToken') || '';
   const userId = getUserFromStorage()?.id;
   let cart = await fetchCartByUserId(userId || '');

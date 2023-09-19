@@ -1,6 +1,7 @@
 import { getAccessToken } from './accessToken';
 import { Address } from '../types';
 import { getUserFromStorage } from '../utils/auth';
+import { creds } from '../assets/credentials';
 
 export async function updateCustomerProfile(actions?: any): Promise<any> {
   const accessToken =
@@ -10,7 +11,7 @@ export async function updateCustomerProfile(actions?: any): Promise<any> {
   const customerId = user?.id;
   const version = user?.version;
 
-  const updateURL = `https://api.${process.env.REACT_APP_REGION}.commercetools.com/${process.env.REACT_APP_PROJECT_KEY}/customers/${customerId}`;
+  const updateURL = `https://api.${creds.region}.commercetools.com/${creds.projectKey}/customers/${customerId}`;
 
   return fetch(updateURL, {
     method: 'POST',
@@ -180,7 +181,7 @@ export async function changeCustomerPassword(
   const customerId = user?.id;
   const version = user?.version;
 
-  const API_ENDPOINT = `https://api.${process.env.REACT_APP_REGION}.commercetools.com/${process.env.REACT_APP_PROJECT_KEY}/customers/password`;
+  const API_ENDPOINT = `https://api.${creds.region}.commercetools.com/${creds.projectKey}/customers/password`;
   const accessToken =
     localStorage.getItem('accessToken') || (await getAccessToken());
   const response = await fetch(API_ENDPOINT, {
