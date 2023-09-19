@@ -8,21 +8,16 @@ import {
   Box,
   SelectChangeEvent,
 } from '@mui/material';
-
 import { ICategory, IProduct } from '../types';
 import { getCategoryByID } from '../commercetools-api/queryCategories';
 import {
   queryAllProducts,
   searchProducts,
 } from '../commercetools-api/queryAllProducts';
-import { getCartByCustomerID } from '../commercetools-api/getCartByCustomerID';
-import { createCart } from '../commercetools-api/createCart';
-
 import ProductCard from '../components/common/ProductCard';
 import CategorySidebar from '../components/common/CategorySidebar';
 import BreadcrumbNavigation from '../components/common/BreadcrumbNavigation';
 import SearchAndFilter from '../components/common/SearchAndFilter';
-import { current } from '@reduxjs/toolkit';
 
 function CategoryPage() {
   const { id } = useParams<{ id?: string }>();

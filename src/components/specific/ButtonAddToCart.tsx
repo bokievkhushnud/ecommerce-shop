@@ -1,15 +1,8 @@
 import React from 'react';
-import {
-  CardContent,
-  CardActionArea,
-  CardMedia,
-  Typography,
-  Box,
-  Button,
-} from '@mui/material';
-import { addProductToCart } from '../../commercetools-api/addProductToCart';
 import './ButtonAddToCart.scss';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
+import { addProductToCart } from '../../commercetools-api/updateCart';
+import { getCart } from '../../commercetools-api/createCart';
 
 interface ButtonAddToCartProps {
   productId: string;
@@ -18,8 +11,10 @@ interface ButtonAddToCartProps {
 const ButtonAddToCart: React.FC<ButtonAddToCartProps> = ({ productId }) => {
   const handleAddToCartClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    // addProductToCart('1111', productId);
-    console.log(`Added product with ID ${productId} to cart`);
+    getCart().then((data) => {
+      console.log(`Added product with ID ${productId} to cart ${data.id}`);
+      addProductToCart(data.id, productId);
+    });
   };
 
   return (
