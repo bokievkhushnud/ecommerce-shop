@@ -13,4 +13,9 @@
   &:hover {
     background-color: rgb(2, 161, 66);
   }
+
+  &.inactive {
+    background-color: rgb(160, 160, 160);
+    cursor: not-allowed;
+  }
 }
