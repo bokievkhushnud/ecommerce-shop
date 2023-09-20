@@ -1,6 +1,7 @@
 import { getAccessToken } from './accessToken';
 import { FormData } from '../types/types';
 import { transformToApiFormat } from '../utils/helpers';
+import { getUserAccessToken } from './loginService';
 
 export async function registerCustomer(
   formData: FormData,
@@ -8,6 +9,10 @@ export async function registerCustomer(
   isDefaultBillingAddress: boolean,
   isAlsoBillingAddress: boolean
 ): Promise<any> {
+  try {
+    getUserAccessToken(formData.email, formData.password || '');
+  } catch {}
+
   const accessToken =
     localStorage.getItem('accessToken') || (await getAccessToken());
   const registrationURL = `https://api.${process.env.REACT_APP_REGION}.commercetools.com/${process.env.REACT_APP_PROJECT_KEY}/customers`;

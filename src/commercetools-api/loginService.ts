@@ -28,7 +28,7 @@ export async function loginUser(
   }
 }
 
-async function getUserAccessToken(
+export async function getUserAccessToken(
   email: string,
   password: string
 ): Promise<string> {
