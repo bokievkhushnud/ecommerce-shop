@@ -43,6 +43,7 @@ const CartItem: React.FC<CartItemProps> = ({
   const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
   const handleQuantityChange = async (newQuantity: number) => {
     if (newQuantity < 1) return;
     setIsLoading(true);
@@ -75,7 +76,14 @@ const CartItem: React.FC<CartItemProps> = ({
   };
 
   return (
-    <Card sx={{ display: 'flex', marginBottom: '8px', padding: '8px' }}>
+    <Card
+      sx={{
+        display: 'flex',
+        marginBottom: '8px',
+        padding: '8px',
+        maxWidth: '400px',
+      }}
+    >
       <CardMedia
         component="img"
         sx={{ width: 80, marginRight: '12px' }}
@@ -85,7 +93,6 @@ const CartItem: React.FC<CartItemProps> = ({
       <CardContent sx={{ flex: '1', padding: '8px' }}>
         <Typography
           variant="h6"
-          noWrap
           sx={{ width: '75%', overflow: 'hidden', textOverflow: 'ellipsis' }}
         >
           {name}
