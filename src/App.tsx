@@ -11,6 +11,7 @@ import theme from './theme/theme';
 import MainPage from './pages/MainPage';
 import MainLayout from './components/layouts/MainLayout';
 import NotFoundPage from './pages/NotFound';
+import AboutUs from '../src/pages/AboutUs';
 import { useSelector } from 'react-redux';
 import { RootState } from './store';
 import { ToastContainer } from 'react-toastify';
@@ -89,6 +90,14 @@ const App: React.FC = () => {
     {
       path: '*',
       element: <NotFoundPage />,
+    },
+    {
+      path: '/about-us',
+      element: (
+        <MainLayout>
+          <AboutUs />
+        </MainLayout>
+      ),
     },
   ]);
 
