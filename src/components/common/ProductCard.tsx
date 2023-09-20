@@ -1,22 +1,22 @@
 import React from 'react';
 import { IProduct } from '../../types';
-import { Link } from 'react-router-dom';
 import { ButtonAddToCart } from '../specific/ButtonAddToCart';
 import './ProductCard.scss';
+import { useNavigate } from 'react-router-dom';
 
-const ProductCard: React.FC<IProduct> = (product) => {
+interface ProductCardProps {
+  product: IProduct;
+}
+
+const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const { name, description, masterVariant } = product;
+  const navigate = useNavigate();
 
   const displayPrice = (centAmount: number) =>
     `$${(centAmount * 0.01).toFixed(2)}`;
 
   const redirectToProduct = (e: React.MouseEvent) => {
-    console.log(e.target);
-    if (!(e.target instanceof HTMLButtonElement)) {
-      window.location.href = `/products/${product.id}`;
-    } else {
-      e.stopPropagation();
-    }
+    navigate(`/products/${product.id}`);
   };
 
   return (

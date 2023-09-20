@@ -14,6 +14,9 @@ import {
   removeCartItem,
 } from '../../commercetools-api/updateCart';
 import { adaptCartData } from '../../utils/helpers';
+import { updateCartQuantity } from '../../store/cartSlice';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 interface CartItemProps {
   cartId: string;
@@ -38,6 +41,8 @@ const CartItem: React.FC<CartItemProps> = ({
 }) => {
   const [currentQuantity, setCurrentQuantity] = useState<number>(quantity);
   const [isLoading, setIsLoading] = useState(false);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleQuantityChange = async (newQuantity: number) => {
     if (newQuantity < 1) return;
@@ -49,6 +54,7 @@ const CartItem: React.FC<CartItemProps> = ({
         lineItemId,
         newQuantity
       );
+      dispatch(updateCartQuantity(updatedData.totalLineItemQuantity));
       onQuantityChange(adaptCartData(updatedData));
     } catch (error) {
       console.error('Failed to update cart item quantity:', error);
@@ -60,15 +66,24 @@ const CartItem: React.FC<CartItemProps> = ({
     setIsLoading(true);
     try {
       const updatedData = await removeCartItem(cartId, lineItemId);
+      dispatch(updateCartQuantity(updatedData.totalLineItemQuantity));
       onQuantityChange(adaptCartData(updatedData));
     } catch (error) {
       console.error('Failed to delete cart item:', error);
     }
+    navigate('/categories');
     setIsLoading(false);
   };
 
   return (
-    <Card sx={{ display: 'flex', marginBottom: '8px', padding: '8px' }}>
+    <Card
+      sx={{
+        display: 'flex',
+        marginBottom: '8px',
+        padding: '8px',
+        maxWidth: '400px',
+      }}
+    >
       <CardMedia
         component="img"
         sx={{ width: 80, marginRight: '12px' }}
@@ -78,7 +93,6 @@ const CartItem: React.FC<CartItemProps> = ({
       <CardContent sx={{ flex: '1', padding: '8px' }}>
         <Typography
           variant="h6"
-          noWrap
           sx={{ width: '75%', overflow: 'hidden', textOverflow: 'ellipsis' }}
         >
           {name}

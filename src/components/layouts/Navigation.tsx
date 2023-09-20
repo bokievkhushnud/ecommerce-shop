@@ -10,6 +10,7 @@ import Container from '@mui/material/Container';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
+import Badge from '@mui/material/Badge';
 import MenuItem from '@mui/material/MenuItem';
 import LunchDiningOutlinedIcon from '@mui/icons-material/LunchDiningOutlined';
 import { useNavigate } from 'react-router-dom';
@@ -20,6 +21,8 @@ import { RootState } from '../../store';
 import { getUserFromStorage } from '../../utils/auth';
 import CartDrawer from '../specific/CartDrawer';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import { getCart } from '../../commercetools-api/createCart';
+import { updateCartQuantity } from '../../store/cartSlice';
 
 const pages = [
   { path: '/', name: 'Home' },
@@ -35,6 +38,21 @@ const ResponsiveAppBar: React.FC = () => {
   const isLoggedIn = useSelector((state: RootState) => state.auth.isLoggedIn);
   const user = getUserFromStorage();
   const [openCart, setOpenCart] = React.useState(false);
+  const itemsQuantity = useSelector(
+    (state: RootState) => state.cart.itemsQuantity
+  );
+
+  getCart()
+    .then((cartData) => {
+      const totalItems = cartData.lineItems.reduce(
+        (acc: number, item: any) => acc + item.quantity,
+        0
+      );
+      dispatch(updateCartQuantity(totalItems));
+    })
+    .catch((error) => {
+      console.error('Failed to fetch cart data:', error);
+    });
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
@@ -144,9 +162,21 @@ const ResponsiveAppBar: React.FC = () => {
                   <Typography textAlign="center">Register</Typography>
                 </MenuItem>
               )}
+              <MenuItem
+                key="about"
+                onClick={() => {
+                  navigate('/about');
+                  handleCloseNavMenu();
+                }}
+              >
+                <Typography textAlign="center">About Us</Typography>
+              </MenuItem>
+
               <MenuItem key="Cart">
                 <Typography textAlign="center">Cart</Typography>
-                <ShoppingCartIcon />
+                <Badge badgeContent={itemsQuantity} color="secondary">
+                  <ShoppingCartIcon />
+                </Badge>
               </MenuItem>
             </Menu>
           </Box>
@@ -215,6 +245,9 @@ const ResponsiveAppBar: React.FC = () => {
               onClick={() => setOpenCart(true)}
             >
               Cart
+              <Badge badgeContent={itemsQuantity} color="secondary">
+                <ShoppingCartIcon sx={{ ml: 1 }} />
+              </Badge>
             </Button>
           </Box>
 
