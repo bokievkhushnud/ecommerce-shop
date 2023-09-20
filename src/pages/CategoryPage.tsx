@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import {
   Container,
@@ -145,7 +145,7 @@ function CategoryPage() {
                   ) {
                     return (
                       <Grid item xs={12} sm={6} md={4} key={index}>
-                        <ProductCard {...product} />
+                        <ProductCard product={product} />
                       </Grid>
                     );
                   }

@@ -4,6 +4,10 @@ import './ButtonAddToCart.scss';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import { addProductToCart } from '../../commercetools-api/updateCart';
 import { getCart } from '../../commercetools-api/createCart';
+import { toast } from 'react-toastify';
+import { useDispatch, useSelector } from 'react-redux';
+import { updateCartQuantity } from '../../store/cartSlice';
+import { RootState } from '../../store';
 
 interface ButtonAddToCartProps {
   productId: string;
@@ -11,31 +15,39 @@ interface ButtonAddToCartProps {
 
 const ButtonAddToCart: React.FC<ButtonAddToCartProps> = ({ productId }) => {
   const [isProductInCart, setIsProductInCart] = useState(false);
+  const dispatch = useDispatch();
+  const itemsQuantity = useSelector(
+    (state: RootState) => state.cart.itemsQuantity
+  );
 
-  // TODO when user goes to other categories button becomes active again
-  // useEffect(() => {
-  //   console.log('check product in cart')
-  //   getCart().then((data) => {
-  //     if (
-  //       data.lineItems.some((product: { id: string }) => {
-  //         console.log(product.id, productId);
-  //         product.id === productId;
-  //       })
-  //     ) {
-  //       console.log('true');
-  //       setIsProductInCart(true);
-  //     }
-  //   });
-  // }, [productId]);
+  useEffect(() => {
+    getCart().then((data) => {
+      const { lineItems } = data;
+      const productInCart = lineItems.find(
+        (item: any) => item.productId === productId
+      );
+      console.log(productInCart);
+      if (productInCart) {
+        setIsProductInCart(true);
+      }
+    });
+  }, [productId, itemsQuantity]);
 
   const handleAddToCartClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     // TODO if user logedout - 404
+    setIsProductInCart(true);
     getCart().then((data) => {
-      console.log(data);
-      console.log(`Added product with ID ${productId} to cart ${data.id}`);
-      addProductToCart(data.id, productId);
-      setIsProductInCart(true);
+      toast.success(`Product added to cart`);
+      addProductToCart(data.id, productId)
+        .then((data) => {
+          console.log(data);
+          dispatch(updateCartQuantity(data.totalLineItemQuantity));
+        })
+        .catch((error) => {
+          toast.error('Error adding product to cart:', error);
+          setIsProductInCart(false);
+        });
     });
   };
 
@@ -48,7 +60,7 @@ const ButtonAddToCart: React.FC<ButtonAddToCartProps> = ({ productId }) => {
           : 'Add product to your cart'
       }
       onClick={(e) => handleAddToCartClick(e)}
-      disabled={isProductInCart}
+      disabled={itemsQuantity > 0 && isProductInCart}
     >
       <AddShoppingCartIcon
         className="icon-add-to-cart"

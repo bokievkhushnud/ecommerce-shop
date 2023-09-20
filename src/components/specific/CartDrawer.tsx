@@ -14,6 +14,8 @@ import { adaptCartData } from '../../utils/helpers';
 import { getCart } from '../../commercetools-api/createCart';
 import { deleteCart } from '../../commercetools-api/delteCart';
 import applyPromoCode from './handlePromoCode';
+import { updateCartQuantity } from '../../store/cartSlice';
+import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
 
 interface CartDrawerProps {
@@ -31,6 +33,7 @@ const CartDrawer: React.FC<CartDrawerProps> = ({
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [promoCode, setPromoCode] = useState<string>('');
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (open) {
@@ -55,6 +58,7 @@ const CartDrawer: React.FC<CartDrawerProps> = ({
     try {
       await deleteCart(cartData.cartId, cartData.version);
       setCartData(null); // Clear the local cart state
+      dispatch(updateCartQuantity(0));
     } catch (error) {
       console.error('Error clearing the cart:', error);
     }
