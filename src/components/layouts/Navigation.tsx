@@ -24,6 +24,7 @@ import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 const pages = [
   { path: '/', name: 'Home' },
   { path: '/categories', name: 'Categories' },
+  { path: '/about', name: 'About Us' },
 ];
 
 const ResponsiveAppBar: React.FC = () => {

@@ -92,7 +92,7 @@ const App: React.FC = () => {
       element: <NotFoundPage />,
     },
     {
-      path: '/about-us',
+      path: '/about',
       element: (
         <MainLayout>
           <AboutUs />
