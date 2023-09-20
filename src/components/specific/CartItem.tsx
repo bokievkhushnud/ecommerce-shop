@@ -7,8 +7,12 @@ import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
+import DeleteIcon from '@mui/icons-material/Delete';
 import { useState } from 'react';
-import { updateCartItemQuantity } from '../../commercetools-api/updateCart';
+import {
+  updateCartItemQuantity,
+  removeCartItem,
+} from '../../commercetools-api/updateCart';
 import { adaptCartData } from '../../utils/helpers';
 
 interface CartItemProps {
@@ -16,7 +20,8 @@ interface CartItemProps {
   lineItemId: string;
   name: string;
   imageUrl: string;
-  individualPrice: number;
+  discountedPrice?: number;
+  originalPrice: number;
   quantity: number;
   onQuantityChange: (data?: any) => void;
 }
@@ -26,7 +31,8 @@ const CartItem: React.FC<CartItemProps> = ({
   lineItemId,
   name,
   imageUrl,
-  individualPrice,
+  discountedPrice,
+  originalPrice,
   quantity,
   onQuantityChange,
 }) => {
@@ -38,7 +44,7 @@ const CartItem: React.FC<CartItemProps> = ({
     setIsLoading(true);
     try {
       setCurrentQuantity(newQuantity);
-      let updatedData = await updateCartItemQuantity(
+      const updatedData = await updateCartItemQuantity(
         cartId,
         lineItemId,
         newQuantity
@@ -46,6 +52,17 @@ const CartItem: React.FC<CartItemProps> = ({
       onQuantityChange(adaptCartData(updatedData));
     } catch (error) {
       console.error('Failed to update cart item quantity:', error);
+    }
+    setIsLoading(false);
+  };
+
+  const handleDeleteItem = async () => {
+    setIsLoading(true);
+    try {
+      const updatedData = await removeCartItem(cartId, lineItemId);
+      onQuantityChange(adaptCartData(updatedData));
+    } catch (error) {
+      console.error('Failed to delete cart item:', error);
     }
     setIsLoading(false);
   };
@@ -72,8 +89,20 @@ const CartItem: React.FC<CartItemProps> = ({
           alignItems="center"
           marginTop="8px"
         >
+          {discountedPrice && discountedPrice !== originalPrice && (
+            <Typography
+              variant="body2"
+              style={{ textDecoration: 'line-through', opacity: 0.6 }}
+            >
+              Original: ${originalPrice.toFixed(2)}
+            </Typography>
+          )}
+
           <Typography variant="body2">
-            Price: ${individualPrice.toFixed(2)}
+            Price: $
+            {discountedPrice
+              ? discountedPrice.toFixed(2)
+              : originalPrice.toFixed(2)}
           </Typography>
           <Box display="flex" alignItems="center">
             <IconButton
@@ -100,8 +129,19 @@ const CartItem: React.FC<CartItemProps> = ({
               <AddCircleOutlineIcon fontSize="small" />
             </IconButton>
             <Typography variant="body2" marginLeft="12px">
-              Total: ${(individualPrice * currentQuantity).toFixed(2)}
+              Total: $
+              {discountedPrice
+                ? (discountedPrice * currentQuantity).toFixed(2)
+                : (originalPrice * currentQuantity).toFixed(2)}
             </Typography>
+            <IconButton
+              size="small"
+              color="secondary"
+              onClick={handleDeleteItem}
+              disabled={isLoading}
+            >
+              <DeleteIcon fontSize="small" />
+            </IconButton>
           </Box>
         </Box>
       </CardContent>

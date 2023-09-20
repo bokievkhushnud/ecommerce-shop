@@ -120,32 +120,33 @@ const ResponsiveAppBar: React.FC = () => {
                 </MenuItem>
               ))}
 
-              <MenuItem
-                key="Login"
-                onClick={() => {
-                  navigate('/login');
-                  handleCloseNavMenu();
-                }}
-              >
-                <Typography textAlign="center">Login</Typography>
-              </MenuItem>
+              {!isLoggedIn && (
+                <MenuItem
+                  key="Login"
+                  onClick={() => {
+                    navigate('/login');
+                    handleCloseNavMenu();
+                  }}
+                >
+                  <Typography textAlign="center">Login</Typography>
+                </MenuItem>
+              )}
 
-              <MenuItem
-                key="Register"
-                onClick={() => {
-                  navigate('/register');
-                  handleCloseNavMenu();
-                }}
-              >
-                <Typography textAlign="center">Register</Typography>
-              </MenuItem>
-              <IconButton
-                edge="end"
-                color="inherit"
-                onClick={() => setOpenCart(true)}
-              >
+              {!isLoggedIn && (
+                <MenuItem
+                  key="Register"
+                  onClick={() => {
+                    navigate('/register');
+                    handleCloseNavMenu();
+                  }}
+                >
+                  <Typography textAlign="center">Register</Typography>
+                </MenuItem>
+              )}
+              <MenuItem key="Cart">
+                <Typography textAlign="center">Cart</Typography>
                 <ShoppingCartIcon />
-              </IconButton>
+              </MenuItem>
             </Menu>
           </Box>
           <LunchDiningOutlinedIcon
@@ -183,34 +184,37 @@ const ResponsiveAppBar: React.FC = () => {
                 {page.name}
               </Button>
             ))}
-            <Button
-              key="Login"
-              onClick={() => {
-                navigate('/login');
-                handleCloseNavMenu();
-              }}
-              sx={{ my: 2, color: 'white', display: 'block' }}
-            >
-              Login
-            </Button>
+            {!isLoggedIn && (
+              <Button
+                key="Login"
+                onClick={() => {
+                  navigate('/login');
+                  handleCloseNavMenu();
+                }}
+                sx={{ my: 2, color: 'white', display: 'block' }}
+              >
+                Login
+              </Button>
+            )}
 
+            {!isLoggedIn && (
+              <Button
+                key="Register"
+                onClick={() => {
+                  navigate('/register');
+                  handleCloseNavMenu();
+                }}
+                sx={{ my: 2, color: 'white', display: 'block' }}
+              >
+                Register
+              </Button>
+            )}
             <Button
-              key="Register"
-              onClick={() => {
-                navigate('/register');
-                handleCloseNavMenu();
-              }}
               sx={{ my: 2, color: 'white', display: 'block' }}
-            >
-              Register
-            </Button>
-            <IconButton
-              edge="end"
-              color="inherit"
               onClick={() => setOpenCart(true)}
             >
-              <ShoppingCartIcon />
-            </IconButton>
+              Cart
+            </Button>
           </Box>
 
           {isLoggedIn && (
