@@ -1,11 +1,10 @@
 // api to create a cart
 import { getUserFromStorage } from '../utils/auth';
 import { fetchCartByUserId } from './fetchCart';
+import { getAnonymousAccessToken } from './getAnonymousAccessToken';
 
-async function createCart(): Promise<any> {
+async function createCart(bearerToken: string): Promise<any> {
   const createCartURL: string = `https://api.${process.env.REACT_APP_REGION}.commercetools.com/${process.env.REACT_APP_PROJECT_KEY}/me/carts`;
-  const bearerToken: string = localStorage.getItem('userAccessToken') || '';
-  const userId = getUserFromStorage()?.id;
   const cartData = {
     currency: 'USD',
   };
@@ -30,12 +29,34 @@ async function createCart(): Promise<any> {
 
 export async function getCart(): Promise<any> {
   const userId = getUserFromStorage()?.id;
+  if (!userId) {
+    if (!localStorage.getItem('anonymousCartId')) {
+      let anonymousAccessToken: string =
+        localStorage.getItem('anonymousAccessToken') ||
+        (await getAnonymousAccessToken());
+      let cart = await createCart(anonymousAccessToken);
+      localStorage.setItem('anonymousCartId', cart.id);
+      return cart;
+    } else {
+      try {
+        let cart = await fetchCartByUserId();
+        return cart;
+      } catch (error) {
+        let anonymousAccessToken: string =
+          localStorage.getItem('anonymousAccessToken') ||
+          (await getAnonymousAccessToken());
+        let cart = await createCart(anonymousAccessToken);
+        localStorage.setItem('anonymousCartId', cart.id);
+        return cart;
+      }
+    }
+  }
   try {
     let cart = await fetchCartByUserId(userId || '');
     return cart;
   } catch (error) {
-    console.log(error);
-    let cart = await createCart();
+    const bearerToken: string = localStorage.getItem('userAccessToken') || '';
+    let cart = await createCart(bearerToken);
     return cart;
   }
 }

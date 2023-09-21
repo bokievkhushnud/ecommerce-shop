@@ -6,7 +6,10 @@ const applyPromoCode = async (
   promoCode: string
 ) => {
   const url: string = `https://api.${process.env.REACT_APP_REGION}.commercetools.com/${process.env.REACT_APP_PROJECT_KEY}/me/carts/${cartId}`;
-  const bearerToken: string = localStorage.getItem('userAccessToken') || '';
+  const bearerToken: string =
+    localStorage.getItem('userAccessToken') ||
+    localStorage.getItem('anonymousAccessToken') ||
+    '';
   const body = {
     version,
     actions: [
