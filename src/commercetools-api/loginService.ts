@@ -22,6 +22,11 @@ export async function loginUser(
   });
 
   if (response.ok) {
+    try {
+      localStorage.removeItem('anonymousCartId');
+      localStorage.removeItem('anonymousAccessToken');
+      localStorage.removeItem('anonymousRefreshToken');
+    } catch {}
     return response.json();
   } else {
     throw new Error('HTTP Error: ' + response.status);

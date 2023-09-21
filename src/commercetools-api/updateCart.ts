@@ -7,7 +7,10 @@ export async function updateCartItemQuantity(
   newQuantity: number
 ): Promise<any> {
   const updateURL: string = `https://api.${process.env.REACT_APP_REGION}.commercetools.com/${process.env.REACT_APP_PROJECT_KEY}/me/carts/${cartId}`;
-  const bearerToken: string = localStorage.getItem('userAccessToken') || '';
+  const bearerToken: string =
+    localStorage.getItem('userAccessToken') ||
+    localStorage.getItem('anonymousAccessToken') ||
+    '';
   const userId = getUserFromStorage()?.id;
   let cart = await fetchCartByUserId(userId || '');
   const updateData = {
@@ -37,15 +40,16 @@ export async function updateCartItemQuantity(
   }
 }
 
-
 // function to remove item from cart
 export async function removeCartItem(
   cartId: string,
   lineItemId: string
-
 ): Promise<any> {
   const updateURL: string = `https://api.${process.env.REACT_APP_REGION}.commercetools.com/${process.env.REACT_APP_PROJECT_KEY}/me/carts/${cartId}`;
-  const bearerToken: string = localStorage.getItem('userAccessToken') || '';
+  const bearerToken: string =
+    localStorage.getItem('userAccessToken') ||
+    localStorage.getItem('anonymousAccessToken') ||
+    '';
   const userId = getUserFromStorage()?.id;
   let cart = await fetchCartByUserId(userId || '');
   const updateData = {
@@ -74,13 +78,15 @@ export async function removeCartItem(
   }
 }
 
-
 export async function addProductToCart(
   cartId: string,
   productId: string
 ): Promise<any> {
   const updateURL: string = `https://api.${process.env.REACT_APP_REGION}.commercetools.com/${process.env.REACT_APP_PROJECT_KEY}/me/carts/${cartId}`;
-  const bearerToken: string = localStorage.getItem('userAccessToken') || '';
+  const bearerToken: string =
+    localStorage.getItem('userAccessToken') ||
+    localStorage.getItem('anonymousAccessToken') ||
+    '';
   const userId = getUserFromStorage()?.id;
   let cart = await fetchCartByUserId(userId || '');
   const updateData = {

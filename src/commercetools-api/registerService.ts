@@ -36,6 +36,9 @@ export async function registerCustomer(
     try {
       getUserAccessToken(formData.email, formData.password || '');
     } catch {}
+    localStorage.removeItem('anonymousCartId');
+    localStorage.removeItem('anonymousAccessToken');
+    localStorage.removeItem('anonymousRefreshToken');
 
     return response.json();
   });

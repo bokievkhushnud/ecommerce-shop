@@ -291,6 +291,7 @@ const ResponsiveAppBar: React.FC = () => {
                     handleLogout();
                     dispatch(logout());
                     handleCloseUserMenu();
+                    navigate('/');
                   }}
                 >
                   <Typography textAlign="center">Logout</Typography>
