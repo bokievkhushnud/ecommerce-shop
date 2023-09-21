@@ -172,7 +172,7 @@ const ResponsiveAppBar: React.FC = () => {
                 <Typography textAlign="center">About Us</Typography>
               </MenuItem>
 
-              <MenuItem key="Cart">
+              <MenuItem key="Cart" onClick={() => setOpenCart(true)}>
                 <Typography textAlign="center">Cart</Typography>
                 <Badge badgeContent={itemsQuantity} color="secondary">
                   <ShoppingCartIcon />

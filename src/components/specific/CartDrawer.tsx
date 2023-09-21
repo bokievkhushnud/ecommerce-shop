@@ -63,10 +63,11 @@ const CartDrawer: React.FC<CartDrawerProps> = ({
   const handleClearCart = async () => {
     try {
       await deleteCart(cartData.cartId, cartData.version);
-      setCartData(null); // Clear the local cart state
+      setCartData(null);
       dispatch(updateCartQuantity(0));
       handleCloseConfirmModal();
       toast.success('Cart cleared successfully!');
+      window.location.reload();
     } catch (error) {
       console.error('Error clearing the cart:', error);
     }

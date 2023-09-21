@@ -71,7 +71,6 @@ const CartItem: React.FC<CartItemProps> = ({
     } catch (error) {
       console.error('Failed to delete cart item:', error);
     }
-    navigate('/categories');
     setIsLoading(false);
   };
 
