@@ -35,6 +35,8 @@ const ButtonAddToCart: React.FC<ButtonAddToCartProps> = ({
       );
       if (productInCart) {
         setIsProductInCart(true);
+      } else {
+        setIsProductInCart(false);
       }
     });
   }, [productId, itemsQuantity]);
