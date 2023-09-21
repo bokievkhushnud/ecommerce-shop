@@ -8,18 +8,23 @@ import {
   Divider,
   Chip,
   Grid,
+  Button,
 } from '@mui/material';
 import { red } from '@mui/material/colors';
 import { getProductByID } from '../commercetools-api/queryAllProducts';
 import { IProduct } from '../types';
 import ImageModal from '../components/specific/ImageModal';
 
+import { checkBasketOnProduct } from '../commercetools-api/checkBasketonProduct';
+
 const ProductDetailPage: React.FC = () => {
   const { productId } = useParams<{ productId: string }>();
   const [product, setProduct] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [btnText, setBtnText] = useState('');
 
+  checkBasketOnProduct();
   useEffect(() => {
     setLoading(true);
     getProductByID(productId as string)
@@ -103,6 +108,7 @@ const ProductDetailPage: React.FC = () => {
               )}
             </Box>
           </Grid>
+          <Button>{btnText}</Button>
         </Grid>
 
         {/* Add any additional details here */}
