@@ -17,6 +17,11 @@ import applyPromoCode from '../../commercetools-api/handlePromoCode';
 import { updateCartQuantity } from '../../store/cartSlice';
 import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContentText from '@mui/material/DialogContentText';
 
 interface CartDrawerProps {
   open: boolean;
@@ -34,6 +39,7 @@ const CartDrawer: React.FC<CartDrawerProps> = ({
   const [promoCode, setPromoCode] = useState<string>('');
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
 
   useEffect(() => {
     if (open) {
@@ -59,9 +65,19 @@ const CartDrawer: React.FC<CartDrawerProps> = ({
       await deleteCart(cartData.cartId, cartData.version);
       setCartData(null); // Clear the local cart state
       dispatch(updateCartQuantity(0));
+      handleCloseConfirmModal();
+      toast.success('Cart cleared successfully!');
     } catch (error) {
       console.error('Error clearing the cart:', error);
     }
+  };
+
+  const handleOpenConfirmModal = () => {
+    setIsConfirmModalOpen(true);
+  };
+
+  const handleCloseConfirmModal = () => {
+    setIsConfirmModalOpen(false);
   };
 
   const handleApplyPromoCode = async () => {
@@ -240,7 +256,7 @@ const CartDrawer: React.FC<CartDrawerProps> = ({
               variant="text"
               color="error"
               fullWidth
-              onClick={handleClearCart}
+              onClick={handleOpenConfirmModal}
               style={{ marginTop: '10px' }}
             >
               Clear Cart
@@ -248,6 +264,27 @@ const CartDrawer: React.FC<CartDrawerProps> = ({
           ) : null}
         </div>
       </div>
+      <Dialog
+        open={isConfirmModalOpen}
+        onClose={handleCloseConfirmModal}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">{'Clear Cart'}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Are you sure you want to clear your cart?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseConfirmModal} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleClearCart} color="primary" autoFocus>
+            Confirm
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Drawer>
   );
 };
