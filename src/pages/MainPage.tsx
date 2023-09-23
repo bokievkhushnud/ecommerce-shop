@@ -9,12 +9,14 @@ import {
   CardContent,
   Chip,
   Avatar,
+  IconButton,
 } from '@mui/material';
 import LocalOfferIcon from '@mui/icons-material/LocalOffer';
 import { queryCategories } from '../commercetools-api/queryCategories';
 import CategoryCard from '../components/common/CategoryCard';
 import { ICategory } from '../types';
 import { fetchPromoCodes } from '../commercetools-api/fetchPromoCodes';
+import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 
 const MainPage: React.FC = () => {
   const [categories, setCategories] = useState<ICategory[] | null>(null);
@@ -44,17 +46,46 @@ const MainPage: React.FC = () => {
 
   return (
     <Container>
-      <Box mt={4} display="flex" flexDirection="column" alignItems="center">
-        <Typography variant="h4" gutterBottom>
-          Welcome to Grandma's Shop
-        </Typography>
-        <Typography variant="h6" paragraph>
-          We'll remind you of your grandma's cooking.
-        </Typography>
-        {promoCodes.map((code) => (
-          <Box mt={4} mb={4} width="100%" key={code.id}>
-            <Card elevation={5} style={{ backgroundColor: '#ffeb3b' }}>
-              {/* Chose a vibrant yellow for attention */}
+      <Box
+        mt={4}
+        display="flex"
+        flexDirection="row"
+        alignItems="center"
+        justifyContent="space-between"
+      >
+        <IconButton
+          color="secondary"
+          aria-label="previous"
+          style={{ border: '#848482 1px solid' }}
+        >
+          <NavigateNextIcon style={{ transform: 'rotate(180deg)' }} />
+        </IconButton>
+        {promoCodes.map((code, index) => (
+          <Box
+            key={code.id}
+            mt={4}
+            mb={4}
+            width="100%"
+            display="flex"
+            flexDirection="row"
+            alignItems="center"
+            marginTop={0}
+            style={{
+              justifyContent: 'center',
+            }}
+          >
+            <Card
+              elevation={5}
+              className="promocode-card"
+              style={{
+                backgroundImage: 'url(./market.jpg)',
+                backgroundSize: 'cover',
+                height: '15rem',
+                width: '85%',
+                borderRadius: '12px',
+                color: 'white',
+              }}
+            >
               <CardContent>
                 <Typography
                   variant="h5"
@@ -81,7 +112,34 @@ const MainPage: React.FC = () => {
             </Card>
           </Box>
         ))}
-        <Grid container spacing={3}>
+        <IconButton
+          color="secondary"
+          aria-label="next"
+          style={{ border: '#848482 1px solid' }}
+        >
+          <NavigateNextIcon />
+        </IconButton>
+      </Box>
+
+      <Box
+        mt={4}
+        display="flex"
+        flexDirection="column"
+        alignItems="center"
+        marginTop={0}
+      >
+        <Typography
+          variant="h6"
+          gutterBottom
+          style={{
+            fontWeight: 'bold',
+            marginBottom: '20px',
+            alignSelf: 'start',
+          }}
+        >
+          Shop by category
+        </Typography>
+        <Grid container spacing={4}>
           {categories ? (
             categories.map((category, index) => {
               if (category.parent === null) {

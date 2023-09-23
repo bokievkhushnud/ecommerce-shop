@@ -19,11 +19,12 @@ const CategoryCard: React.FC<CategoryCardProps> = ({ category }) => {
   return (
     <Card
       style={{
-        maxWidth: 300,
+        maxWidth: 280,
         margin: 'auto',
         borderRadius: 12,
-        boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+        boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
         transition: 'transform .2s',
+        position: 'relative',
       }}
     >
       <CardActionArea
@@ -33,16 +34,32 @@ const CategoryCard: React.FC<CategoryCardProps> = ({ category }) => {
       >
         <CardMedia
           style={{
-            height: 260,
-            backgroundPosition: 'center',
+            height: 290,
+            backgroundPosition: 'center bottom',
             borderTopLeftRadius: 12,
             borderTopRightRadius: 12,
+            position: 'relative',
           }}
           image={imageUrl}
           title={category.name['en-US']}
         />
-        <CardContent>
-          <Typography variant="h6" component="div" align="center">
+        <CardContent
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            padding: '8px',
+            fontWeight: '600',
+          }}
+        >
+          <Typography
+            variant="subtitle1"
+            component="div"
+            style={{
+              fontWeight: '600',
+              color: '#848482',
+            }}
+          >
             {category.name['en-US']}
           </Typography>
         </CardContent>
