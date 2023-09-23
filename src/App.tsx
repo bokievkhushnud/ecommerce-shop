@@ -20,6 +20,7 @@ import { UserProfilePage } from './pages/UserProfilePage';
 import ProductDetails from './pages/ProductDetails';
 import CategoryPage from './pages/CategoryPage';
 import ProductDetailsPage from './pages/ProductDetailsPage';
+import WelcomeBanner from './components/specific/WelcomeBanner';
 
 const App: React.FC = () => {
   const isLoggedIn = useSelector((state: RootState) => state.auth.isLoggedIn);
@@ -49,6 +50,7 @@ const App: React.FC = () => {
       path: '/',
       element: (
         <MainLayout>
+          <WelcomeBanner />
           <MainPage />
         </MainLayout>
       ),
