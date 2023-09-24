@@ -11,6 +11,7 @@ import theme from './theme/theme';
 import MainPage from './pages/MainPage';
 import MainLayout from './components/layouts/MainLayout';
 import NotFoundPage from './pages/NotFound';
+import AboutUs from '../src/pages/AboutUs';
 import { useSelector } from 'react-redux';
 import { RootState } from './store';
 import { ToastContainer } from 'react-toastify';
@@ -19,6 +20,7 @@ import { UserProfilePage } from './pages/UserProfilePage';
 import ProductDetails from './pages/ProductDetails';
 import CategoryPage from './pages/CategoryPage';
 import ProductDetailsPage from './pages/ProductDetailsPage';
+import WelcomeBanner from './components/specific/WelcomeBanner';
 
 const App: React.FC = () => {
   const isLoggedIn = useSelector((state: RootState) => state.auth.isLoggedIn);
@@ -48,6 +50,7 @@ const App: React.FC = () => {
       path: '/',
       element: (
         <MainLayout>
+          <WelcomeBanner />
           <MainPage />
         </MainLayout>
       ),
@@ -89,6 +92,14 @@ const App: React.FC = () => {
     {
       path: '*',
       element: <NotFoundPage />,
+    },
+    {
+      path: '/about',
+      element: (
+        <MainLayout>
+          <AboutUs />
+        </MainLayout>
+      ),
     },
   ]);
 

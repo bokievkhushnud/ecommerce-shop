@@ -1,10 +1,9 @@
-export async function getAccessToken(): Promise<string> {
-  const authURL = `https://auth.${process.env.REACT_APP_REGION}.commercetools.com/oauth/token`;
+export async function getAnonymousAccessToken(): Promise<string> {
+  const loginURL: string = `https://auth.${process.env.REACT_APP_REGION}.commercetools.com/oauth/${process.env.REACT_APP_PROJECT_KEY}/anonymous/token`;
   const credentials = btoa(
     `${process.env.REACT_APP_CLIENT_ID}:${process.env.REACT_APP_CLIENT_SECRET}`
   );
-
-  const response = await fetch(authURL, {
+  const response = await fetch(loginURL, {
     method: 'POST',
     headers: {
       Authorization: `Basic ${credentials}`,
@@ -15,7 +14,8 @@ export async function getAccessToken(): Promise<string> {
 
   if (response.ok) {
     const data = await response.json();
-    localStorage.setItem('accessToken', data.access_token);
+    localStorage.setItem('anonymousAccessToken', data.access_token);
+    localStorage.setItem('anonymousRefreshToken', data.refresh_token);
     return data.access_token;
   } else {
     throw new Error('HTTP Error: ' + response.status);

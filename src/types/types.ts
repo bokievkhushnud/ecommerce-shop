@@ -23,3 +23,10 @@ export type ImagesURL = {
   label: string;
   dimensions: { w: number; h: string };
 };
+
+export type TeammateData = {
+  name: string;
+  role: string;
+  github: string;
+  contributions: string[];
+};

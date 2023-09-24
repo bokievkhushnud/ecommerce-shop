@@ -1,0 +1,21 @@
+.button-add-to-cart {
+  display: inline-block;
+  background-color: #00b749;
+  color: white;
+  padding: 5px 8px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 18px;
+
+  &:hover {
+    background-color: rgb(2, 161, 66);
+  }
+
+  &.inactive {
+    background-color: rgb(160, 160, 160);
+    cursor: not-allowed;
+  }
+}

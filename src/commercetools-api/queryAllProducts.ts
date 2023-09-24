@@ -1,8 +1,12 @@
 import { getAccessToken } from './accessToken';
+import { ICategory } from '../types';
 
-export async function queryAllProducts(sortOrder: string): Promise<any> {
+export async function queryAllProducts(
+  sortOrder: string,
+  page: number = 1,
+  category?: ICategory | null
+): Promise<any> {
   let sortParam = '';
-
   if (sortOrder) {
     switch (sortOrder) {
       case 'name.en-US.asc':
@@ -21,8 +25,10 @@ export async function queryAllProducts(sortOrder: string): Promise<any> {
         break;
     }
   }
-
-  const url: string = `https://api.${process.env.REACT_APP_REGION}.commercetools.com/${process.env.REACT_APP_PROJECT_KEY}/product-projections/search?${sortParam}`;
+  const filterParams = category
+    ? `&filter=categories.id:"${category.id}"`
+    : `&limit=${6 + 3 * (page - 1)}`;
+  const url: string = `https://api.${process.env.REACT_APP_REGION}.commercetools.com/${process.env.REACT_APP_PROJECT_KEY}/product-projections/search?${sortParam}${filterParams}`;
   const bearerToken: string =
     localStorage.getItem('accessToken') || (await getAccessToken());
 
@@ -35,7 +41,7 @@ export async function queryAllProducts(sortOrder: string): Promise<any> {
 
   if (response.ok) {
     const data = await response.json();
-    return data.results;
+    return data;
   } else {
     throw new Error('HTTP Error: ' + response.status);
   }
@@ -92,7 +98,7 @@ export async function fetchFilteredProducts(
       filterParams += '&filter=attributes.portionSize:exact("large")';
   }
 
-  const url: string = `https://api.${process.env.REACT_APP_REGION}.commercetools.com/${process.env.REACT_APP_PROJECT_KEY}/product-projections?limit=100${filterParams}`;
+  const url: string = `https://api.${process.env.REACT_APP_REGION}.commercetools.com/${process.env.REACT_APP_PROJECT_KEY}/product-projections/search?limit=100${filterParams}`;
   const bearerToken: string =
     localStorage.getItem('accessToken') || (await getAccessToken());
 

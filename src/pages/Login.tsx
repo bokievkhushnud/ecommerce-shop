@@ -48,7 +48,6 @@ const Login: React.FC = () => {
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ): void => {
     let input = e.target.value;
-    console.log(e.target.value);
     setEmail(input);
     EMAIL_REGEX.test(e.target.value)
       ? setEmailError('')

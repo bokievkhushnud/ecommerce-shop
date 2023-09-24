@@ -10,6 +10,7 @@ import Container from '@mui/material/Container';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
+import Badge from '@mui/material/Badge';
 import MenuItem from '@mui/material/MenuItem';
 import LunchDiningOutlinedIcon from '@mui/icons-material/LunchDiningOutlined';
 import { useNavigate } from 'react-router-dom';
@@ -18,11 +19,15 @@ import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../../store/authSlice';
 import { RootState } from '../../store';
 import { getUserFromStorage } from '../../utils/auth';
+import CartDrawer from '../specific/CartDrawer';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import { getCart } from '../../commercetools-api/createCart';
+import { updateCartQuantity } from '../../store/cartSlice';
 
 const pages = [
   { path: '/', name: 'Home' },
-  { path: '/cart', name: 'Cart' },
   { path: '/categories', name: 'Categories' },
+  { path: '/about', name: 'About Us' },
 ];
 
 const ResponsiveAppBar: React.FC = () => {
@@ -32,6 +37,22 @@ const ResponsiveAppBar: React.FC = () => {
   const dispatch = useDispatch();
   const isLoggedIn = useSelector((state: RootState) => state.auth.isLoggedIn);
   const user = getUserFromStorage();
+  const [openCart, setOpenCart] = React.useState(false);
+  const itemsQuantity = useSelector(
+    (state: RootState) => state.cart.itemsQuantity
+  );
+
+  getCart()
+    .then((cartData) => {
+      const totalItems = cartData.lineItems.reduce(
+        (acc: number, item: any) => acc + item.quantity,
+        0
+      );
+      dispatch(updateCartQuantity(totalItems));
+    })
+    .catch((error) => {
+      console.error('Failed to fetch cart data:', error);
+    });
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
@@ -117,7 +138,8 @@ const ResponsiveAppBar: React.FC = () => {
                   <Typography textAlign="center">{page.name}</Typography>
                 </MenuItem>
               ))}
-              {
+
+              {!isLoggedIn && (
                 <MenuItem
                   key="Login"
                   onClick={() => {
@@ -127,8 +149,9 @@ const ResponsiveAppBar: React.FC = () => {
                 >
                   <Typography textAlign="center">Login</Typography>
                 </MenuItem>
-              }
-              {
+              )}
+
+              {!isLoggedIn && (
                 <MenuItem
                   key="Register"
                   onClick={() => {
@@ -138,7 +161,23 @@ const ResponsiveAppBar: React.FC = () => {
                 >
                   <Typography textAlign="center">Register</Typography>
                 </MenuItem>
-              }
+              )}
+              <MenuItem
+                key="about"
+                onClick={() => {
+                  navigate('/about');
+                  handleCloseNavMenu();
+                }}
+              >
+                <Typography textAlign="center">About Us</Typography>
+              </MenuItem>
+
+              <MenuItem key="Cart" onClick={() => setOpenCart(true)}>
+                <Typography textAlign="center">Cart</Typography>
+                <Badge badgeContent={itemsQuantity} color="secondary">
+                  <ShoppingCartIcon />
+                </Badge>
+              </MenuItem>
             </Menu>
           </Box>
           <LunchDiningOutlinedIcon
@@ -176,7 +215,7 @@ const ResponsiveAppBar: React.FC = () => {
                 {page.name}
               </Button>
             ))}
-            {
+            {!isLoggedIn && (
               <Button
                 key="Login"
                 onClick={() => {
@@ -187,8 +226,9 @@ const ResponsiveAppBar: React.FC = () => {
               >
                 Login
               </Button>
-            }
-            {
+            )}
+
+            {!isLoggedIn && (
               <Button
                 key="Register"
                 onClick={() => {
@@ -199,7 +239,16 @@ const ResponsiveAppBar: React.FC = () => {
               >
                 Register
               </Button>
-            }
+            )}
+            <Button
+              sx={{ my: 2, color: 'white', display: 'block' }}
+              onClick={() => setOpenCart(true)}
+            >
+              Cart
+              <Badge badgeContent={itemsQuantity} color="secondary">
+                <ShoppingCartIcon sx={{ ml: 1 }} />
+              </Badge>
+            </Button>
           </Box>
 
           {isLoggedIn && (
@@ -242,6 +291,7 @@ const ResponsiveAppBar: React.FC = () => {
                     handleLogout();
                     dispatch(logout());
                     handleCloseUserMenu();
+                    navigate('/');
                   }}
                 >
                   <Typography textAlign="center">Logout</Typography>
@@ -251,6 +301,11 @@ const ResponsiveAppBar: React.FC = () => {
           )}
         </Toolbar>
       </Container>
+      <CartDrawer
+        open={openCart}
+        onClose={() => setOpenCart(false)}
+        customerID={user?.id}
+      />
     </AppBar>
   );
 };

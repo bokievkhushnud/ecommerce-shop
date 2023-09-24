@@ -11,8 +11,8 @@ import {
 } from '@mui/material';
 import { red } from '@mui/material/colors';
 import { getProductByID } from '../commercetools-api/queryAllProducts';
-import { IProduct } from '../types';
 import ImageModal from '../components/specific/ImageModal';
+import { ButtonAddToCart } from '../components/specific/ButtonAddToCart';
 
 const ProductDetailPage: React.FC = () => {
   const { productId } = useParams<{ productId: string }>();
@@ -36,7 +36,6 @@ const ProductDetailPage: React.FC = () => {
   if (loading) return <CircularProgress />;
   if (error) return <Typography variant="h6">Error: {error}</Typography>;
   if (!product) return <Typography variant="h6">Product not found.</Typography>;
-  console.log(product);
 
   const { name, description, masterVariant } = product.masterData.current;
 
@@ -102,10 +101,16 @@ const ProductDetailPage: React.FC = () => {
                 </Typography>
               )}
             </Box>
+
+            {/* Add to cart button  */}
+            <Box mt={3}>
+              <ButtonAddToCart
+                productId={productId || ''}
+                deleteBtn="deleteBtn"
+              ></ButtonAddToCart>
+            </Box>
           </Grid>
         </Grid>
-
-        {/* Add any additional details here */}
       </Box>
     </Container>
   );

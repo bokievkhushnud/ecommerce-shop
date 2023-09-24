@@ -66,3 +66,42 @@ export const transformToApiFormat = (
 
   return userData;
 };
+
+export function adaptCartData(rawCartData: any) {
+  if (!rawCartData || !rawCartData.lineItems) {
+    return [];
+  }
+
+  const lineItems = rawCartData.lineItems.map((item: any) => {
+    // Default price (before any discount)
+    const originalPrice = item.price.value.centAmount / 100;
+
+    // Use discounted price if available, else fallback to original price
+    const discountedPrice = item.discountedPrice
+      ? item.discountedPrice.value.centAmount / 100
+      : null;
+
+    return {
+      name: item.name['en-US'],
+      imageUrl: item.variant.images[0].url,
+      originalPrice: originalPrice,
+      discountedPrice: discountedPrice,
+      quantity: item.quantity,
+      lineItemId: item.id,
+    };
+  });
+
+  // Extract the total price and discount codes
+  const totalPrice = rawCartData.totalPrice.centAmount / 100;
+  const discountCodes = rawCartData.discountCodes.map(
+    (dc: any) => dc.discountCode.id
+  );
+
+  return {
+    lineItems,
+    cartId: rawCartData.id,
+    version: rawCartData.version,
+    totalPrice,
+    discountCodes,
+  };
+}

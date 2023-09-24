@@ -1,6 +1,7 @@
 import { getAccessToken } from './accessToken';
 import { FormData } from '../types/types';
 import { transformToApiFormat } from '../utils/helpers';
+import { getUserAccessToken } from './loginService';
 
 export async function registerCustomer(
   formData: FormData,
@@ -32,6 +33,13 @@ export async function registerCustomer(
         throw new Error(errorData.message || 'Registration failed.');
       });
     }
+    try {
+      getUserAccessToken(formData.email, formData.password || '');
+    } catch {}
+    localStorage.removeItem('anonymousCartId');
+    localStorage.removeItem('anonymousAccessToken');
+    localStorage.removeItem('anonymousRefreshToken');
+
     return response.json();
   });
 }

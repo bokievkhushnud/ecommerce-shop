@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import {
   Container,
@@ -8,14 +8,12 @@ import {
   Box,
   SelectChangeEvent,
 } from '@mui/material';
-
 import { ICategory, IProduct } from '../types';
 import { getCategoryByID } from '../commercetools-api/queryCategories';
 import {
   queryAllProducts,
   searchProducts,
 } from '../commercetools-api/queryAllProducts';
-
 import ProductCard from '../components/common/ProductCard';
 import CategorySidebar from '../components/common/CategorySidebar';
 import BreadcrumbNavigation from '../components/common/BreadcrumbNavigation';
@@ -27,6 +25,9 @@ function CategoryPage() {
   const [productsData, setProductsData] = useState<IProduct[] | null>(null);
   const [selectedFilter, setSelectedFilter] = useState<string>('Default');
   const [searchTerm, setSearchTerm] = useState<string>('');
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [totalCount, setTotalCount] = useState<number>(0);
+  const [allowfetching, setAllowFetching] = useState<boolean>(true);
 
   const fetchProducts = async () => {
     let sortOrder = '';
@@ -39,19 +40,36 @@ function CategoryPage() {
     } else if (selectedFilter === 'Price: High to Low') {
       sortOrder = 'price.desc';
     }
-
-    if (searchTerm) {
-      const results = await searchProducts(searchTerm);
-      setProductsData(results);
-    } else {
-      const data = await queryAllProducts(sortOrder);
-      setProductsData(data);
+    if (allowfetching) {
+      if (searchTerm) {
+        const results = await searchProducts(searchTerm);
+        setProductsData(results);
+      } else {
+        const data = await queryAllProducts(sortOrder, currentPage, category);
+        setProductsData(data.results);
+        setTotalCount(data.total);
+      }
     }
   };
 
   useEffect(() => {
+    document.addEventListener('scroll', scrollHandler);
+    return function () {
+      document.removeEventListener('scroll', scrollHandler);
+    };
+  }, []);
+
+  useEffect(() => {
     fetchProducts();
-  }, [searchTerm, selectedFilter]);
+  }, [category, searchTerm, selectedFilter, currentPage]);
+
+  useEffect(() => {
+    if (productsData) {
+      if (productsData.length === totalCount) {
+        setAllowFetching(false);
+      }
+    }
+  }, [productsData, totalCount]);
 
   const defaultCategory: ICategory = {
     id: 'istdef',
@@ -63,11 +81,26 @@ function CategoryPage() {
   useEffect(() => {
     if (id) {
       getCategoryByID(id).then((data) => setCategory(data));
+      setCurrentPage(1);
+    } else {
+      setCategory(null);
     }
+    setAllowFetching(true);
   }, [id]);
 
   const handleFilterChange = (event: SelectChangeEvent<string>) => {
     setSelectedFilter(event.target.value);
+    setCurrentPage(1);
+    setAllowFetching(true);
+  };
+  const scrollHandler = () => {
+    if (
+      document.documentElement.scrollHeight -
+        (document.documentElement.scrollTop + window.innerHeight) <
+      50
+    ) {
+      setCurrentPage((prev) => prev + 1);
+    }
   };
 
   return (
@@ -112,7 +145,7 @@ function CategoryPage() {
                   ) {
                     return (
                       <Grid item xs={12} sm={6} md={4} key={index}>
-                        <ProductCard {...product} />
+                        <ProductCard product={product} />
                       </Grid>
                     );
                   }
