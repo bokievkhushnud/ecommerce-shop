@@ -50,7 +50,19 @@ const Footer = () => {
             Subscribe
           </Button>
         </Grid>
-        <Grid sm={5}></Grid>
+        <Grid sm={5}>
+          <Typography variant="h4" sx={{ textAlign: 'right' }}>
+            Contacts
+          </Typography>
+          <Typography variant="body1" sx={{ textAlign: 'right' }}>
+            <Link underline="none" href="tel:+123456789">
+              +123456789
+            </Link>
+            <Link underline="none" href="mailto:grandmasbasket@mail.com">
+              grandmasbasket@mail.com
+            </Link>
+          </Typography>
+        </Grid>
       </Grid>
     </Box>
   );
