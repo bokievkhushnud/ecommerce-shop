@@ -61,6 +61,7 @@ This project is built using a variety of modern web development technologies:
 ![Static Badge](https://img.shields.io/badge/Husky-maker?color=%23a5005b)
 ![Static Badge](https://img.shields.io/badge/CommerceTools-maker)
 ![Static Badge](https://img.shields.io/badge/Jest-maker?color=%23411142)
+![Static Badge](https://img.shields.io/badge/MaterialUI-maker?color=%232d49a3)
 
 ## Scripts
 
