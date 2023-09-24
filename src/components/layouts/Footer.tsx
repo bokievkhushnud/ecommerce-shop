@@ -6,6 +6,7 @@ import {
   TextField,
   Button,
   InputAdornment,
+  Grid,
 } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import EmailIcon from '@mui/icons-material/Email';
@@ -21,34 +22,36 @@ const Footer = () => {
         backgroundColor: '#000',
       }}
     >
-      <div>
-        <Typography></Typography>
-        <TextField
-          id="email-subscribtion"
-          label="Email"
-          type="email"
-          defaultValue="Enter your email"
-          helperText="Enter email"
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <EmailIcon />
-              </InputAdornment>
-            ),
-          }}
-        />
-        <Button
-          variant="outlined"
-          sx={{
-            color: '#fff',
-            borderBlockColor: '#fff',
-          }}
-          endIcon={<SendIcon />}
-        >
-          Subscribe
-        </Button>
-      </div>
-      <div></div>
+      <Grid container spacing={2}>
+        <Grid sm={5}>
+          <Typography variant="body1">Subscribe to our news-letters</Typography>
+          <TextField
+            id="email-subscribtion"
+            label="Email"
+            type="email"
+            defaultValue="Enter your email"
+            helperText="Enter email"
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <EmailIcon />
+                </InputAdornment>
+              ),
+            }}
+          />
+          <Button
+            variant="outlined"
+            sx={{
+              color: '#fff',
+              borderBlockColor: '#fff',
+            }}
+            endIcon={<SendIcon />}
+          >
+            Subscribe
+          </Button>
+        </Grid>
+        <Grid sm={5}></Grid>
+      </Grid>
     </Box>
   );
 };
