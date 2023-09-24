@@ -1,5 +1,6 @@
 import React from 'react';
 import Navigation from './Navigation';
+import Footer from './Footer';
 
 type PageWrapperProps = {
   children: React.ReactNode;
@@ -10,6 +11,7 @@ const MainLayout: React.FC<PageWrapperProps> = ({ children }) => {
     <div>
       <Navigation />
       {children}
+      <Footer />
     </div>
   );
 };
