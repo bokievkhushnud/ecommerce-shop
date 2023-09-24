@@ -16,49 +16,56 @@ const Footer = () => {
     <Box
       component="footer"
       sx={{
-        py: 3,
-        px: 2,
         mt: 'auto',
-        backgroundColor: '#000',
+        borderTop: 'solid 3px #000',
       }}
     >
-      <Grid container spacing={2}>
-        <Grid sm={5}>
-          <Typography variant="body1">Subscribe to our news-letters</Typography>
-          <TextField
-            id="email-subscribtion"
-            label="Email"
-            type="email"
-            defaultValue="Enter your email"
-            helperText="Enter email"
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <EmailIcon />
-                </InputAdornment>
-              ),
-            }}
-          />
-          <Button
-            variant="outlined"
-            sx={{
-              color: '#fff',
-              borderBlockColor: '#fff',
-            }}
-            endIcon={<SendIcon />}
-          >
-            Subscribe
-          </Button>
+      <Grid container spacing={2} sx={{ padding: '15px' }}>
+        <Grid sm={12} md={6} sx={{ padding: '15px' }}>
+          <Typography variant="h4">Subscribe to our news-letters</Typography>
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <TextField
+              id="email-subscribtion"
+              label="Email"
+              type="email"
+              defaultValue="Enter your email"
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <EmailIcon />
+                  </InputAdornment>
+                ),
+              }}
+            />
+            <Button
+              onClick={() => {
+                alert('Thank you! You have been subscribed.');
+              }}
+              variant="outlined"
+              endIcon={<SendIcon />}
+              sx={{ padding: '10px 0' }}
+            >
+              Subscribe
+            </Button>
+          </div>
         </Grid>
-        <Grid sm={5}>
+        <Grid sm={12} md={6} sx={{ padding: '0px' }}>
           <Typography variant="h4" sx={{ textAlign: 'right' }}>
             Contacts
           </Typography>
-          <Typography variant="body1" sx={{ textAlign: 'right' }}>
-            <Link underline="none" href="tel:+123456789">
+          <Typography variant="body1">
+            <Link
+              underline="none"
+              href="tel:+123456789"
+              sx={{ display: 'block', padding: '15px 0', textAlign: 'right' }}
+            >
               +123456789
             </Link>
-            <Link underline="none" href="mailto:grandmasbasket@mail.com">
+            <Link
+              underline="none"
+              href="mailto:grandmasbasket@mail.com"
+              sx={{ display: 'block', padding: '15px 0', textAlign: 'right' }}
+            >
               grandmasbasket@mail.com
             </Link>
           </Typography>
